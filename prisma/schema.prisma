@@ -13,14 +13,67 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Part {
-  partNum     Int      @id
+model WorkOrder {
+  id          Int      @id @default(autoincrement())
   workOrder   Int
+  partId      Int
   quantity    Int
-  step        Int
+  stepId      Int
+  deliveredBy Int
   receivedAt  DateTime
   priority    String
-  status      String
-  finalizedAt DateTime
-  updatedAt   DateTime @updatedAt
+  statusId    Int
+
+  partStatusRegistry WorkOrderStatusRegistry[]
+
+  status Status @relation(fields: [statusId], references: [id])
+  area   Area   @relation(fields: [deliveredBy], references: [id])
+  part   Part   @relation(fields: [partId], references: [id])
+  step   Step   @relation(fields: [stepId], references: [id])
+}
+
+model Status {
+  id     Int    @id @default(autoincrement())
+  status String
+
+  workOrder          WorkOrder[]
+  partStatusRegistry WorkOrderStatusRegistry[]
+}
+
+model WorkOrderStatusRegistry {
+  id          Int      @id @default(autoincrement())
+  workOrderId Int
+  statusId    Int
+  startedAt   DateTime
+
+  status Status @relation(fields: [statusId], references: [id])
+
+  workOrder WorkOrder @relation(fields: [workOrderId], references: [id])
+}
+
+model Area {
+  id   Int    @id @default(autoincrement())
+  area String
+
+  workOrder WorkOrder[]
+}
+
+model AuthorizedUser {
+  id       Int    @id @default(autoincrement())
+  email    String
+  password String
+}
+
+model Part {
+  id     Int @id @default(autoincrement())
+  number Int
+
+  workOrder WorkOrder[]
+}
+
+model Step {
+  id   Int @id @default(autoincrement())
+  step Int
+
+  workOrder WorkOrder[]
 }

@@ -1,14 +1,37 @@
 import { useState } from "preact/hooks"
 
-export default function PartForm() {
+export default function WorkOrderForm() {
+    const [formData, setFormData] = useState({
+        part: "",
+        workOrder: "",
+        quantity: "",
+        step: "",
+        deliveredBy: "",
+        receivedAt: "",
+        priority: "",
+    })
     const [parts, setParts] = useState([])
     const [steps, setSteps] = useState([])
 
+    function submit(e: Event) {
+        e.preventDefault()
+        fetch('api/part', {
+            method: "POST",
+            body: JSON.stringify({
+                part: formData
+            }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+
+    }
+
     return (
-        <div class="hero flex-grow bg-base-200 min-h-screen ">
+        <div class="hero grow bg-base-200">
             <div class="hero-content flex-col lg:flex-row-reverse">
                 <div class="card bg-base-100 w-[500px] shrink-0 shadow-2xl">
-                    <form class="card-body">
+                    <form onSubmit={submit} class="card-body">
                         <div class="form-control">
                             <label class="label">
                                 <span class="label-text">Número de Parte</span>
@@ -19,6 +42,7 @@ export default function PartForm() {
                                 class="input input-bordered"
                                 required
                                 list="parts"
+                                onChange={(e: any) => setFormData({ ...formData, part: e.target.value })}
                             />
                             <datalist id="parts">
                                 <option value="123123"></option>
@@ -36,6 +60,7 @@ export default function PartForm() {
                                 placeholder="Ingrese work order"
                                 class="input input-bordered"
                                 required
+                                onChange={(e: any) => setFormData({ ...formData, workOrder: e.target.value })}
                             />
                         </div>
 
@@ -48,6 +73,7 @@ export default function PartForm() {
                                 placeholder="Ingrese cantidad"
                                 class="input input-bordered"
                                 required
+                                onChange={(e: any) => setFormData({ ...formData, quantity: e.target.value })}
                             />
                         </div>
 
@@ -61,8 +87,30 @@ export default function PartForm() {
                                 class="input input-bordered"
                                 required
                                 list="steps"
+                                onChange={(e: any) => setFormData({ ...formData, step: e.target.value })}
+
                             />
                             <datalist id="steps">
+                                <option value="123123"></option>
+                                <option value="412321"></option>
+                                <option value="531134"></option>
+                            </datalist>
+                        </div>
+
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Departamento Que Entrega</span>
+                            </label>
+                            <input
+                                type="text"
+                                placeholder="Ingrese departamento"
+                                class="input input-bordered"
+                                required
+                                list="departamento"
+                                onChange={(e: any) => setFormData({ ...formData, deliveredBy: e.target.value })}
+
+                            />
+                            <datalist id="departamento">
                                 <option value="123123"></option>
                                 <option value="412321"></option>
                                 <option value="531134"></option>
@@ -78,7 +126,7 @@ export default function PartForm() {
                                 placeholder="Ingrese cantidad"
                                 class="input input-bordered"
                                 required
-                                value="2025-01-01T00:00"
+                                onChange={(e: any) => setFormData({ ...formData, receivedAt: e.target.value })}
                             />
                         </div>
 
@@ -86,7 +134,9 @@ export default function PartForm() {
                             <div class="label">
                                 <span class="label-text">Prioridad</span>
                             </div>
-                            <select class="select select-bordered">
+                            <select class="select select-bordered"
+                                onChange={(e: any) => setFormData({ ...formData, priority: e.target.value })}
+                            >
                                 <option disabled selected>Selecciona</option>
                                 <option>Alta</option>
                                 <option>Media</option>
@@ -94,7 +144,7 @@ export default function PartForm() {
                             </select>
                         </label>
                         <div class="form-control mt-6">
-                            <button class="btn btn-primary">Agregar</button>
+                            <button class="btn btn-success text-xl">Agregar</button>
                         </div>
                     </form>
                 </div>

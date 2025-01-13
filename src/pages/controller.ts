@@ -24,7 +24,7 @@ export default class CMMController {
 
   public addPart(part: string): void {
     //Add Part with Prisma
-    this.parts.push(part);
+    // this.parts.push(part);
     this.emitter.emit("part", part);
   }
 
