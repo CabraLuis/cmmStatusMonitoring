@@ -1,8 +1,16 @@
 ---
-import WorkOrderForm from "../../components/WorkOrderForm";
-import LoggedLayout from "../../layouts/LoggedLayout.astro";
+import LoginForm from "../../components/LoginForm";
+import Layout from "../../layouts/Layout.astro";
+
+if (Astro.cookies.has("auth")) {
+  const cookie = Astro.cookies.get("auth");
+  const value = cookie?.number();
+  if (value !== undefined && !isNaN(value)) {
+    return Astro.redirect("/new");
+  }
+}
 ---
 
-<LoggedLayout title="CMM">
-  <WorkOrderForm client:load />
-</LoggedLayout>
+<Layout title="Login">
+  <LoginForm />
+</Layout>

@@ -1,4 +1,4 @@
-import { useState } from "preact/hooks"
+import { useEffect, useState } from "preact/hooks"
 
 export default function WorkOrderForm() {
     const [formData, setFormData] = useState({
@@ -6,25 +6,38 @@ export default function WorkOrderForm() {
         workOrder: "",
         quantity: "",
         step: "",
-        deliveredBy: "",
+        area: "",
         receivedAt: "",
         priority: "",
     })
+
     const [parts, setParts] = useState([])
     const [steps, setSteps] = useState([])
+    const [areas, setAreas] = useState([])
+
+    useEffect(() => {
+        async function getInfo() {
+            let response = await fetch('/api/info')
+            let data = await response.json()
+            setParts(data.info.parts)
+            setSteps(data.info.steps)
+            setAreas(data.info.areas)
+        }
+        getInfo()
+    }, [])
 
     function submit(e: Event) {
         e.preventDefault()
-        fetch('api/part', {
+        fetch('api/workOrder', {
             method: "POST",
             body: JSON.stringify({
-                part: formData
+                workOrder: formData
             }),
             headers: {
                 "Content-Type": "application/json",
             },
         })
-
+        console.log(formData.receivedAt)
     }
 
     return (
@@ -45,9 +58,11 @@ export default function WorkOrderForm() {
                                 onChange={(e: any) => setFormData({ ...formData, part: e.target.value })}
                             />
                             <datalist id="parts">
-                                <option value="123123"></option>
-                                <option value="412321"></option>
-                                <option value="531134"></option>
+                                {
+                                    parts.map((part: any) => (
+                                        <option value={part.number}></option>
+                                    ))
+                                }
                             </datalist>
                         </div>
 
@@ -91,9 +106,11 @@ export default function WorkOrderForm() {
 
                             />
                             <datalist id="steps">
-                                <option value="123123"></option>
-                                <option value="412321"></option>
-                                <option value="531134"></option>
+                                {
+                                    steps.map((step: any) => (
+                                        <option value={step.step}></option>
+                                    ))
+                                }
                             </datalist>
                         </div>
 
@@ -107,13 +124,15 @@ export default function WorkOrderForm() {
                                 class="input input-bordered"
                                 required
                                 list="departamento"
-                                onChange={(e: any) => setFormData({ ...formData, deliveredBy: e.target.value })}
+                                onChange={(e: any) => setFormData({ ...formData, area: e.target.value })}
 
                             />
                             <datalist id="departamento">
-                                <option value="123123"></option>
-                                <option value="412321"></option>
-                                <option value="531134"></option>
+                                {
+                                    areas.map((area: any) => (
+                                        <option value={area.area}></option>
+                                    ))
+                                }
                             </datalist>
                         </div>
 
@@ -137,10 +156,11 @@ export default function WorkOrderForm() {
                             <select class="select select-bordered"
                                 onChange={(e: any) => setFormData({ ...formData, priority: e.target.value })}
                             >
+
                                 <option disabled selected>Selecciona</option>
-                                <option>Alta</option>
-                                <option>Media</option>
-                                <option>Baja</option>
+                                <option value="1">Alta</option>
+                                <option value="2">Media</option>
+                                <option value="3">Baja</option>
                             </select>
                         </label>
                         <div class="form-control mt-6">

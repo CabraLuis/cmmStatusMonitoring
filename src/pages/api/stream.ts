@@ -2,14 +2,13 @@ import type { APIRoute } from "astro";
 import CMMController from "../controller";
 
 export const GET: APIRoute = async ({ request }) => {
-  let sendEvent: (part: any) => void;
+  let sendEvent: () => void;
   const stream = new ReadableStream({
     start(controller) {
       const encoder = new TextEncoder();
 
-      sendEvent = (part: any) => {
-        console.log(JSON.stringify(part));
-        const data = `data: ${JSON.stringify(part)}\n\n`;
+      sendEvent = () => {
+        const data = `data: UPDATED\n\n`;
         controller.enqueue(encoder.encode(data));
       };
 

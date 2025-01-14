@@ -1,0 +1,12 @@
+---
+import WorkOrderForm from "../../components/WorkOrderForm";
+import LoggedLayout from "../../layouts/LoggedLayout.astro";
+
+if (!Astro.cookies.has("auth")) {
+  return Astro.redirect("/cmm");
+}
+---
+
+<LoggedLayout title="CMM">
+  <WorkOrderForm client:load />
+</LoggedLayout>

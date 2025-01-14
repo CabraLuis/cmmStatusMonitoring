@@ -5,7 +5,6 @@ export default class CMMController {
   private constructor() {}
 
   private emitter = new events.EventEmitter();
-  private parts: string[] = [];
 
   static getInstance(): CMMController {
     if (!CMMController.instance) {
@@ -15,21 +14,14 @@ export default class CMMController {
   }
 
   public sub(listener: any): any {
-    return this.emitter.on("part", listener);
+    return this.emitter.on("workOrder", listener);
   }
 
   public unsub(listener: any): any {
-    return this.emitter.off("part", listener);
+    return this.emitter.off("workOrder", listener);
   }
 
-  public addPart(part: string): void {
-    //Add Part with Prisma
-    // this.parts.push(part);
-    this.emitter.emit("part", part);
-  }
-
-  public getParts(): string[] {
-    // Get parts with Prisma
-    return this.parts;
+  public addOrUpdate(): void {
+    this.emitter.emit("workOrder", "UPDATED");
   }
 }

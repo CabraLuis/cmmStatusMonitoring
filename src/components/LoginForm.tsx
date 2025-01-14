@@ -1,9 +1,10 @@
 import Navbar from "./Navbar";
 
+// Hora y fecha de liberacion agregar
 export default function LoginForm() {
     return (
         <div>
-            <Navbar title="CMM Dashboard" buttonText="Estado En Vivo" path="/live" />
+            <Navbar title="CMM Dashboard" buttonText="Estado En Vivo" path="/" />
             <div class="hero bg-base-200 min-h-screen">
                 <div class="hero-content flex-col lg:flex-row-reverse">
                     <div class="text-center lg:text-left">
