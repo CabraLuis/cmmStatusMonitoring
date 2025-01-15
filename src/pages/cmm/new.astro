@@ -1,4 +1,5 @@
 ---
+import Dashboard from "../../components/Dashboard";
 import WorkOrderForm from "../../components/WorkOrderForm";
 import LoggedLayout from "../../layouts/LoggedLayout.astro";
 
@@ -8,5 +9,7 @@ if (!Astro.cookies.has("auth")) {
 ---
 
 <LoggedLayout title="CMM">
-  <WorkOrderForm client:load />
+  <Dashboard client:load />
 </LoggedLayout>
+
+<!-- tabla se acepto o rechazo modal -->

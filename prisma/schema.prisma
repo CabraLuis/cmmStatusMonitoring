@@ -23,6 +23,7 @@ model WorkOrder {
   receivedAt  DateTime
   priorityId  Int
   statusId    Int
+  rejected    Boolean
 
   partStatusRegistry WorkOrderStatusRegistry[]
 

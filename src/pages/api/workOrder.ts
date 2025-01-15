@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import CMMController from "../controller";
+import CMMController from "../../lib/controller";
 import { prisma } from "../../lib/prisma";
 
 export const POST: APIRoute = async ({ request }) => {
@@ -68,7 +68,7 @@ export const GET: APIRoute = async () => {
       step: true,
     },
   });
-  console.log(workOrders);
+
   return new Response(JSON.stringify(workOrders), {
     status: 200,
     headers: { "Content-Type": "application/json" },

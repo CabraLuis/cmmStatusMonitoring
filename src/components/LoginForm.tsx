@@ -1,7 +1,20 @@
+import { useState } from "preact/hooks";
 import Navbar from "./Navbar";
 
 // Hora y fecha de liberacion agregar
 export default function LoginForm() {
+    const [formData, setFormData] = useState({
+        email: "",
+        password: ""
+    })
+    function submit(e: Event) {
+        e.preventDefault()
+        fetch('/api/login', {
+            method: 'POST',
+            body: JSON.stringify({ user: formData }), headers: { 'Content-Type': 'application/json' }
+        })
+    }
+
     return (
         <div>
             <Navbar title="CMM Dashboard" buttonText="Estado En Vivo" path="/" />
@@ -12,16 +25,17 @@ export default function LoginForm() {
                         <p class="py-6">Ingresa tus credenciales para administrar los status</p>
                     </div>
                     <div class="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
-                        <form class="card-body">
+                        <form onSubmit={submit} class="card-body">
                             <div class="form-control">
                                 <label class="label">
-                                    <span class="label-text">Email</span>
+                                    <span class="label-text">Nombre de Usuario</span>
                                 </label>
                                 <input
-                                    type="email"
-                                    placeholder="2361****@nibegroup.us"
+                                    type="text"
+                                    placeholder="Ingresa nombre de usuario"
                                     class="input input-bordered"
                                     required
+                                    onChange={(e: any) => setFormData({ ...formData, email: e.target.value })}
                                 />
                             </div>
                             <div class="form-control">
@@ -33,6 +47,7 @@ export default function LoginForm() {
                                     placeholder="Ingresa contraseña"
                                     class="input input-bordered"
                                     required
+                                    onChange={(e: any) => setFormData({ ...formData, password: e.target.value })}
                                 />
                             </div>
                             <div class="form-control mt-6">

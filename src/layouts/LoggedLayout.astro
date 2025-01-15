@@ -9,6 +9,14 @@ const { title } = Astro.props;
 ---
 
 <Layout title={title}>
-  <Navbar title="CMM Dashboard" buttonText="Estado En Vivo" path="/" />
+  <div class="navbar bg-base-100">
+    <div class="navbar-start">
+      <a class="btn btn-ghost text-xl">CMM Dashboard</a>
+    </div>
+    <div class="navbar-end">
+      <a href="/cmm/new" class="btn bg-info">Agregar Work Order</a>
+      <a href="/cmm/update" class="btn bg-accent">Actualizar Status</a>
+    </div>
+  </div>
   <slot />
 </Layout>
