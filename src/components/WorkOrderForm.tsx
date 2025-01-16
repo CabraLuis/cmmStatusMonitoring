@@ -1,7 +1,7 @@
 import { useEffect, useState } from "preact/hooks"
 
 export default function WorkOrderForm() {
-    const [formData, setFormData] = useState({
+    const fields = {
         part: "",
         workOrder: "",
         quantity: "",
@@ -9,8 +9,11 @@ export default function WorkOrderForm() {
         area: "",
         receivedAt: "",
         priority: "",
-    })
+        estimatedTime: "",
+        rejected: false,
+    }
 
+    const [formData, setFormData] = useState(fields)
     const [parts, setParts] = useState([])
     const [steps, setSteps] = useState([])
     const [areas, setAreas] = useState([])
@@ -37,6 +40,7 @@ export default function WorkOrderForm() {
                 "Content-Type": "application/json",
             },
         })
+        setFormData({ ...fields })
     }
 
     return (

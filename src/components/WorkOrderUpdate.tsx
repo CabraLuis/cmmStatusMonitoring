@@ -1,214 +1,112 @@
+import { useEffect, useState } from "preact/hooks";
+import Navbar from "./Navbar";
+
 export default function WorkOrderUpdate() {
+    const [data, setData] = useState([])
+    useEffect(() => {
+        async function getInfo() {
+            let response = await fetch('/api/workOrder')
+            let data = await response.json()
+            setData(data)
+        }
+
+        getInfo()
+
+        const eventSource = new EventSource('/api/stream')
+        eventSource.onmessage = (event) => {
+            getInfo()
+        }
+        return () => eventSource.close()
+    }, [])
+
     return (
-        <>
-            <div class="overflow-x-auto">
-                <table class="table table-xs">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Name</th>
-                            <th>Job</th>
-                            <th>company</th>
-                            <th>location</th>
-                            <th>Last Login</th>
-                            <th>Favorite Color</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th>1</th>
-                            <td>Cy Ganderton</td>
-                            <td>Quality Control Specialist</td>
-                            <td>Littel, Schaden and Vandervort</td>
-                            <td>Canada</td>
-                            <td>12/16/2020</td>
-                            <td>Blue</td>
-                        </tr>
-                        <tr>
-                            <th>2</th>
-                            <td>Hart Hagerty</td>
-                            <td>Desktop Support Technician</td>
-                            <td>Zemlak, Daniel and Leannon</td>
-                            <td>United States</td>
-                            <td>12/5/2020</td>
-                            <td>Purple</td>
-                        </tr>
-                        <tr>
-                            <th>3</th>
-                            <td>Brice Swyre</td>
-                            <td>Tax Accountant</td>
-                            <td>Carroll Group</td>
-                            <td>China</td>
-                            <td>8/15/2020</td>
-                            <td>Red</td>
-                        </tr>
-                        <tr>
-                            <th>4</th>
-                            <td>Marjy Ferencz</td>
-                            <td>Office Assistant I</td>
-                            <td>Rowe-Schoen</td>
-                            <td>Russia</td>
-                            <td>3/25/2021</td>
-                            <td>Crimson</td>
-                        </tr>
-                        <tr>
-                            <th>5</th>
-                            <td>Yancy Tear</td>
-                            <td>Community Outreach Specialist</td>
-                            <td>Wyman-Ledner</td>
-                            <td>Brazil</td>
-                            <td>5/22/2020</td>
-                            <td>Indigo</td>
-                        </tr>
-                        <tr>
-                            <th>6</th>
-                            <td>Irma Vasilik</td>
-                            <td>Editor</td>
-                            <td>Wiza, Bins and Emard</td>
-                            <td>Venezuela</td>
-                            <td>12/8/2020</td>
-                            <td>Purple</td>
-                        </tr>
-                        <tr>
-                            <th>7</th>
-                            <td>Meghann Durtnal</td>
-                            <td>Staff Accountant IV</td>
-                            <td>Schuster-Schimmel</td>
-                            <td>Philippines</td>
-                            <td>2/17/2021</td>
-                            <td>Yellow</td>
-                        </tr>
-                        <tr>
-                            <th>8</th>
-                            <td>Sammy Seston</td>
-                            <td>Accountant I</td>
-                            <td>O'Hara, Welch and Keebler</td>
-                            <td>Indonesia</td>
-                            <td>5/23/2020</td>
-                            <td>Crimson</td>
-                        </tr>
-                        <tr>
-                            <th>9</th>
-                            <td>Lesya Tinham</td>
-                            <td>Safety Technician IV</td>
-                            <td>Turner-Kuhlman</td>
-                            <td>Philippines</td>
-                            <td>2/21/2021</td>
-                            <td>Maroon</td>
-                        </tr>
-                        <tr>
-                            <th>10</th>
-                            <td>Zaneta Tewkesbury</td>
-                            <td>VP Marketing</td>
-                            <td>Sauer LLC</td>
-                            <td>Chad</td>
-                            <td>6/23/2020</td>
-                            <td>Green</td>
-                        </tr>
-                        <tr>
-                            <th>11</th>
-                            <td>Andy Tipple</td>
-                            <td>Librarian</td>
-                            <td>Hilpert Group</td>
-                            <td>Poland</td>
-                            <td>7/9/2020</td>
-                            <td>Indigo</td>
-                        </tr>
-                        <tr>
-                            <th>12</th>
-                            <td>Sophi Biles</td>
-                            <td>Recruiting Manager</td>
-                            <td>Gutmann Inc</td>
-                            <td>Indonesia</td>
-                            <td>2/12/2021</td>
-                            <td>Maroon</td>
-                        </tr>
-                        <tr>
-                            <th>13</th>
-                            <td>Florida Garces</td>
-                            <td>Web Developer IV</td>
-                            <td>Gaylord, Pacocha and Baumbach</td>
-                            <td>Poland</td>
-                            <td>5/31/2020</td>
-                            <td>Purple</td>
-                        </tr>
-                        <tr>
-                            <th>14</th>
-                            <td>Maribeth Popping</td>
-                            <td>Analyst Programmer</td>
-                            <td>Deckow-Pouros</td>
-                            <td>Portugal</td>
-                            <td>4/27/2021</td>
-                            <td>Aquamarine</td>
-                        </tr>
-                        <tr>
-                            <th>15</th>
-                            <td>Moritz Dryburgh</td>
-                            <td>Dental Hygienist</td>
-                            <td>Schiller, Cole and Hackett</td>
-                            <td>Sri Lanka</td>
-                            <td>8/8/2020</td>
-                            <td>Crimson</td>
-                        </tr>
-                        <tr>
-                            <th>16</th>
-                            <td>Reid Semiras</td>
-                            <td>Teacher</td>
-                            <td>Sporer, Sipes and Rogahn</td>
-                            <td>Poland</td>
-                            <td>7/30/2020</td>
-                            <td>Green</td>
-                        </tr>
-                        <tr>
-                            <th>17</th>
-                            <td>Alec Lethby</td>
-                            <td>Teacher</td>
-                            <td>Reichel, Glover and Hamill</td>
-                            <td>China</td>
-                            <td>2/28/2021</td>
-                            <td>Khaki</td>
-                        </tr>
-                        <tr>
-                            <th>18</th>
-                            <td>Aland Wilber</td>
-                            <td>Quality Control Specialist</td>
-                            <td>Kshlerin, Rogahn and Swaniawski</td>
-                            <td>Czech Republic</td>
-                            <td>9/29/2020</td>
-                            <td>Purple</td>
-                        </tr>
-                        <tr>
-                            <th>19</th>
-                            <td>Teddie Duerden</td>
-                            <td>Staff Accountant III</td>
-                            <td>Pouros, Ullrich and Windler</td>
-                            <td>France</td>
-                            <td>10/27/2020</td>
-                            <td>Aquamarine</td>
-                        </tr>
-                        <tr>
-                            <th>20</th>
-                            <td>Lorelei Blackstone</td>
-                            <td>Data Coordiator</td>
-                            <td>Witting, Kutch and Greenfelder</td>
-                            <td>Kazakhstan</td>
-                            <td>6/3/2020</td>
-                            <td>Red</td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <th></th>
-                            <th>Name</th>
-                            <th>Job</th>
-                            <th>company</th>
-                            <th>location</th>
-                            <th>Last Login</th>
-                            <th>Favorite Color</th>
-                        </tr>
-                    </tfoot>
-                </table>
+        <div class="h-screen flex flex-col">
+            <Navbar title="CMM Status" buttonText="Registro" path="registry">
+                <div class="navbar-center gap-1">
+                    <div class="badge badge-success">Priodidad Baja</div>
+                    <div class="badge badge-warning">Priodidad Media</div>
+                    <div class="badge badge-error">Priodidad Alta</div>
+                </div>
+            </Navbar>
+            <div
+                class="grid grid-cols-3 bg-base-200  grow"
+            >
+                <div class="grid grid-flow-row auto-rows-max ">
+                    <div class="text-5xl font-bold text-center mb-4 px-5">En Standby</div>
+
+                    {
+                        data.map((workOrder: any) => workOrder.statusId === 1 ? (
+                            <div class="stats grid-cols-2 mb-2 mx-4 bg-success border border-black ">
+                                <div class="stat place-items-center">
+                                    <div class="stat-title text-black text-lg font-bold">{workOrder.part.number} ({workOrder.quantity} pz)
+                                    </div>
+                                    <div class="stat-value text-3xl">{workOrder.workOrder}  </div>
+                                    <div class="stat-desc text-black text-xl font-bold">Step {workOrder.step.step}</div>
+                                </div>
+                                <div class="stat place-items-center">
+                                    <div class="stat-title text-black text-lg font-bold">
+                                        Entregado por
+                                    </div>
+                                    <div class="stat-value text-3xl">{workOrder.area.area}</div>
+                                    <div class="stat-desc text-black text-lg font-bold">Recibido {new Date(new Date(workOrder.receivedAt).toUTCString()).toISOString().split("T")[0]} {new Date(new Date(workOrder.receivedAt).toUTCString()).toISOString().split("T")[1].split(".")[0]}</div>
+                                </div>
+                            </div>
+                        ) : null)
+                    }
+                </div>
+
+                <div class="grid grid-flow-row auto-rows-max ">
+                    <div class="text-5xl font-bold text-center mb-4 px-5">Midiendo</div>
+                    {
+                        data.map((workOrder: any) => workOrder.statusId === 2 ? (
+                            <div class="stats grid-cols-2 mb-2 mx-4 border border-black bg-warning">
+                                <div class="stat place-items-center">
+                                    <div class="stat-title text-black text-lg font-bold">{workOrder.part.number} ({workOrder.quantity} pz)</div>
+                                    <div class="stat-value text-3xl">{workOrder.workOrder}  </div>
+                                    <div class="stat-desc text-black text-xl font-bold">Step {workOrder.step.step}</div>
+                                </div>
+                                <div class="stat place-items-center">
+                                    <div class="stat-title text-black text-lg font-bold">Entregado por</div>
+                                    <div class="stat-value text-3xl">{workOrder.area.area}</div>
+                                    <div class="stat-desc text-black text-lg font-bold">Midiendo **********</div>
+
+                                </div>
+                            </div>
+                        ) : null)
+                    }
+                </div>
+
+                <div class="grid grid-flow-row auto-rows-max ">
+                    <div class="text-5xl font-bold text-center mb-4 px-5">Liberadas</div>
+
+                    {
+                        data.map((workOrder: any) => workOrder.statusId === 3 ? (
+                            <div class="stats grid-cols-2 mb-2 mx-4 relative border border-black bg-error">
+                                <div class="stat place-items-center">
+                                    <div class="stat-title text-black text-lg font-bold">{workOrder.part.number} ({workOrder.quantity} pz)</div>
+                                    <div class="stat-value text-3xl">{workOrder.workOrder}  </div>
+                                    <div class="stat-desc text-black text-xl font-bold">Step {workOrder.step.step}</div>
+                                </div>
+                                <div class="stat place-items-center">
+                                    {
+                                        workOrder.rejected ? <>
+                                            <svg class="absolute top-0 right-0 h-14" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#000000"><path d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-60q61.01 0 117.51-20.5Q654-181 699-220L220-699q-38 46-59 102.17T140-480q0 142.37 98.81 241.19Q337.63-140 480-140Zm259-121q37-45 59-101.49 22-56.5 22-117.51 0-142.38-98.81-241.19T480-820q-60.66 0-116.83 21T261-739l478 478Z" /></svg>
+                                        </>
+                                            :
+                                            <>
+                                                <svg class="absolute top-0 right-0 h-14" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#000000"><path d="M480-80q-85 0-158-30.5T195-195q-54-54-84.5-127T80-480q0-84 30.5-157T195-764q54-54 127-85t158-31q75 0 140 24t117 66l-43 43q-44-35-98-54t-116-19q-145 0-242.5 97.5T140-480q0 145 97.5 242.5T480-140q145 0 242.5-97.5T820-480q0-30-4.5-58.5T802-594l46-46q16 37 24 77t8 83q0 85-31 158t-85 127q-54 54-127 84.5T480-80Zm-59-218L256-464l45-45 120 120 414-414 46 45-460 460Z" /></svg>
+                                            </>
+                                    }
+
+                                    <div class="stat-title text-black text-lg font-bold">Entregado por</div>
+                                    <div class="stat-value text-3xl">{workOrder.area.area}</div>
+                                    <div class="stat-desc text-black text-lg font-bold">Liberado *****</div>
+                                </div>
+                            </div>
+                        ) : null)
+                    }
+                </div>
             </div>
-        </>
+        </div>
     )
 }

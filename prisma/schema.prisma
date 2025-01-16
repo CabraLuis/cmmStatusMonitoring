@@ -14,16 +14,16 @@ datasource db {
 }
 
 model WorkOrder {
-  id          Int      @id @default(autoincrement())
-  workOrder   Int      @unique
-  partId      Int
-  quantity    Int
-  stepId      Int
-  deliveredBy Int
-  receivedAt  DateTime
-  priorityId  Int
-  statusId    Int
-  rejected    Boolean
+  id            Int      @id @default(autoincrement())
+  workOrder     Int      @unique
+  partId        Int
+  quantity      Int
+  stepId        Int
+  deliveredBy   Int
+  receivedAt    DateTime
+  priorityId    Int
+  statusId      Int
+  estimatedTime Int
 
   partStatusRegistry WorkOrderStatusRegistry[]
 
@@ -47,6 +47,7 @@ model WorkOrderStatusRegistry {
   workOrderId Int
   statusId    Int
   startedAt   DateTime
+  rejected    Boolean
 
   status Status @relation(fields: [statusId], references: [id])
 

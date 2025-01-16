@@ -51,11 +51,21 @@ export const POST: APIRoute = async ({ request }) => {
       receivedAt: fromDateToString(new Date(workOrder.receivedAt)),
       priorityId: parseInt(workOrder.priority),
       statusId: 1,
+      estimatedTime: parseInt(workOrder.estimatedTime),
+    },
+  });
+
+  const newRegistryEntry = await prisma.workOrderStatusRegistry.create({
+    data: {
+      workOrderId: newWorkOrder.id,
+      statusId: newWorkOrder.statusId,
+      startedAt: newWorkOrder.receivedAt,
+      rejected: false,
     },
   });
 
   CMMController.getInstance().addOrUpdate();
-  return new Response(null, { status: 204 });
+  return new Response(null, { status: 201 });
 };
 
 export const GET: APIRoute = async () => {
@@ -73,4 +83,35 @@ export const GET: APIRoute = async () => {
     status: 200,
     headers: { "Content-Type": "application/json" },
   });
+};
+
+export const UPDATE: APIRoute = async ({ request }) => {
+  const { workOrder } = await request.json();
+
+  function fromDateToString(date: Date) {
+    date = new Date(+date);
+    date.setTime(date.getTime() - date.getTimezoneOffset() * 60000);
+    let dateAsString = date.toISOString();
+    return dateAsString;
+  }
+
+  const updatedWorkOrder = await prisma.workOrder.update({
+    where: { workOrder: workOrder.workOrder },
+    data: {
+      statusId: workOrder.statusId,
+    },
+    include: { partStatusRegistry: true },
+  });
+
+  const newRegistryEntry = await prisma.workOrderStatusRegistry.create({
+    data: {
+      workOrderId: updatedWorkOrder.id,
+      startedAt: fromDateToString(new Date(Date.now())),
+      statusId: updatedWorkOrder.statusId,
+      rejected: workOrder.rejected,
+    },
+  });
+
+  CMMController.getInstance().addOrUpdate();
+  return new Response(null, { status: 201 });
 };
