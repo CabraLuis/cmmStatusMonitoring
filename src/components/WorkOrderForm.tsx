@@ -44,8 +44,7 @@ export default function WorkOrderForm() {
     }
 
     return (
-
-        <form onSubmit={submit} class="card-body">
+        <form onSubmit={submit}>
             <div class="form-control">
                 <label class="label">
                     <span class="label-text">Número de Parte</span>
@@ -113,6 +112,20 @@ export default function WorkOrderForm() {
                         ))
                     }
                 </datalist>
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">Tiempo Estimado (minutos)</span>
+                </label>
+                <input
+                    type="number"
+                    placeholder="Ingrese tiempo estimado de medición"
+                    class="input input-bordered"
+                    required
+                    list="steps"
+                    onChange={(e: any) => setFormData({ ...formData, estimatedTime: e.target.value })}
+                />
             </div>
 
             <div class="form-control">

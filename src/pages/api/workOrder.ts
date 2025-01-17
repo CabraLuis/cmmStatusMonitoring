@@ -85,8 +85,8 @@ export const GET: APIRoute = async () => {
   });
 };
 
-export const UPDATE: APIRoute = async ({ request }) => {
-  const { workOrder } = await request.json();
+export const PATCH: APIRoute = async ({ request }) => {
+  const { workOrder, rejected, statusId } = await request.json();
 
   function fromDateToString(date: Date) {
     date = new Date(+date);
@@ -96,21 +96,23 @@ export const UPDATE: APIRoute = async ({ request }) => {
   }
 
   const updatedWorkOrder = await prisma.workOrder.update({
-    where: { workOrder: workOrder.workOrder },
+    where: { workOrder: parseInt(workOrder) },
     data: {
-      statusId: workOrder.statusId,
+      statusId: parseInt(statusId),
     },
     include: { partStatusRegistry: true },
   });
 
-  const newRegistryEntry = await prisma.workOrderStatusRegistry.create({
-    data: {
-      workOrderId: updatedWorkOrder.id,
-      startedAt: fromDateToString(new Date(Date.now())),
-      statusId: updatedWorkOrder.statusId,
-      rejected: workOrder.rejected,
-    },
-  });
+  if (updatedWorkOrder) {
+    const newRegistryEntry = await prisma.workOrderStatusRegistry.create({
+      data: {
+        workOrderId: updatedWorkOrder.id,
+        startedAt: fromDateToString(new Date(Date.now())),
+        statusId: updatedWorkOrder.statusId,
+        rejected: rejected,
+      },
+    });
+  }
 
   CMMController.getInstance().addOrUpdate();
   return new Response(null, { status: 201 });

@@ -6,7 +6,7 @@ if (Astro.cookies.has("auth")) {
   const cookie = Astro.cookies.get("auth");
   const value = cookie?.number();
   if (value !== undefined && !isNaN(value)) {
-    return Astro.redirect("cmm/new");
+    return Astro.redirect("cmm/board");
   }
 }
 ---

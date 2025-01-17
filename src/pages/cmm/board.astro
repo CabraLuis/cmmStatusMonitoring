@@ -1,6 +1,6 @@
 ---
-import Dashboard from "../../components/Dashboard";
 import WorkOrderForm from "../../components/WorkOrderForm";
+import WorkOrderUpdate from "../../components/WorkOrderUpdate";
 import LoggedLayout from "../../layouts/LoggedLayout.astro";
 
 if (!Astro.cookies.has("auth")) {
@@ -9,5 +9,5 @@ if (!Astro.cookies.has("auth")) {
 ---
 
 <LoggedLayout title="CMM">
-  <Dashboard client:load />
+  <WorkOrderUpdate client:load />
 </LoggedLayout>
