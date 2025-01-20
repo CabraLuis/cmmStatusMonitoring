@@ -13,5 +13,5 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
 
   cookies.set("auth", "1", { path: "/" });
-  return new Response(null, { status: 200 });
+  return new Response(JSON.stringify({message:"OK"}), { status: 200 });
 };

@@ -7,12 +7,18 @@ export default function LoginForm() {
         email: "",
         password: ""
     })
-    function submit(e: Event) {
+
+    async function submit(e: Event) {
         e.preventDefault()
-        fetch('/api/login', {
+       let response = await fetch('/api/login', {
             method: 'POST',
             body: JSON.stringify({ user: formData }), headers: { 'Content-Type': 'application/json' }
         })
+
+        let message = await response.json()
+        if (message.message == "OK") {
+            window.location.href="/cmm"
+        }
     }
 
     return (

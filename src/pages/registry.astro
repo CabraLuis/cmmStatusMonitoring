@@ -1,0 +1,136 @@
+---
+import { prisma } from "../lib/prisma";
+import Layout from "../layouts/Layout.astro";
+import type { Prisma } from "@prisma/client";
+import Navbar from "../components/Navbar";
+
+const data = await prisma.workOrderStatusRegistry.findMany({
+  include: {
+    workOrder: {
+      include: {
+        area: true,
+        part: true,
+        priority: true,
+        step: true,
+      },
+    },
+    status: true,
+  },
+});
+
+type WorkOrderStatusRegistry = Prisma.WorkOrderStatusRegistryGetPayload<{
+  include: {
+    workOrder: {
+      include: {
+        area: true;
+        part: true;
+        priority: true;
+        step: true;
+      };
+    };
+    status: true;
+  };
+}>;
+---
+
+<script>
+  import { DataTable } from "simple-datatables";
+  import { exportCSV } from "simple-datatables";
+  const dataTable = new DataTable("#data", {
+    // Enable search field
+    searchable: true,
+    // Define how many visible wos per page
+    perPage: 10,
+
+    labels: {
+      placeholder: "Search keyword🔎",
+      noRows: "No data found",
+      info: "Showing {start} to {end} of {rows}",
+      perPage: "logs per page",
+      noResults: "No data match your search",
+    },
+    classes: {
+      bottom: "grid grid-cols-1 justify-items-center",
+      paginationList: "join",
+      paginationListItem: "join-item",
+      paginationListItemLink: "btn btn-ghost",
+      active: "btn-active",
+      search: "ml-4",
+      dropdown: "ml-4",
+    },
+  });
+
+  document.getElementById("export")?.addEventListener("click", () => {
+    exportCSV(dataTable, {
+      download: true,
+      lineDelimiter: "\r\n",
+      filename: "cmmLog",
+    });
+  });
+</script>
+
+<Layout title="CMM Log">
+  <Navbar title="CMM Status" buttonText="Registro" path="registry">
+    <div class="navbar-center gap-1">
+      <div class="badge badge-success">Priodidad Baja</div>
+      <div class="badge badge-warning">Priodidad Media</div>
+      <div class="badge badge-error">Priodidad Alta</div>
+    </div>
+  </Navbar>
+  <div class="bg-base-200 grow">
+    <div class="w-full flex justify-center">
+      <button class="btn btn-primary btn-sm mt-1" id="export"> Download</button>
+    </div>
+    <div class="w-full overflow-x-scroll">
+      <div class="mt-3 w-full flex justify-center">
+        <span class="text-red-500">*</span>
+        Sort by clicking on the titles
+      </div>
+
+      <table class="table bg-base-100" id="data">
+        <thead>
+          <tr>
+            <th># Parte</th>
+            <th>WO</th>
+            <th>Cantidad</th>
+            <th>Step</th>
+            <th>Tiempo Estimado</th>
+            <th>Departamento</th>
+            <th>Inicio</th>
+            <th>Prioridad</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            data.map((workOrder: WorkOrderStatusRegistry) => (
+              <tr>
+                <th>{workOrder.workOrder.part.number}</th>
+                <th>{workOrder.workOrder.workOrder}</th>
+                <td>{workOrder.workOrder.quantity}</td>
+                <td>{workOrder.workOrder.step.step}</td>
+                <td>{workOrder.workOrder.estimatedTime}</td>
+                <td>{workOrder.workOrder.area.area}</td>
+                <td>
+                  {
+                    new Date(new Date(workOrder.startedAt).toUTCString())
+                      .toISOString()
+                      .split("T")[0]
+                  }
+                  {
+                    new Date(new Date(workOrder.startedAt).toUTCString())
+                      .toISOString()
+                      .split("T")[1]
+                      .split(".")[0]
+                  }
+                </td>
+                <td>{workOrder.workOrder.priority.priority}</td>
+                <td>{workOrder.status.status}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</Layout>

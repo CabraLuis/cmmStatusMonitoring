@@ -44,7 +44,7 @@ export const POST: APIRoute = async ({ request }) => {
   const newWorkOrder = await prisma.workOrder.create({
     data: {
       partId: newPart.id,
-      workOrder: parseInt(workOrder.workOrder),
+      workOrder: workOrder.workOrder,
       quantity: parseInt(workOrder.quantity),
       stepId: newStep.id,
       deliveredBy: newArea.id,
@@ -52,6 +52,7 @@ export const POST: APIRoute = async ({ request }) => {
       priorityId: parseInt(workOrder.priority),
       statusId: 1,
       estimatedTime: parseInt(workOrder.estimatedTime),
+      rejected: false,
     },
   });
 
@@ -60,7 +61,7 @@ export const POST: APIRoute = async ({ request }) => {
       workOrderId: newWorkOrder.id,
       statusId: newWorkOrder.statusId,
       startedAt: newWorkOrder.receivedAt,
-      rejected: false,
+      rejected: newWorkOrder.rejected,
     },
   });
 
@@ -76,6 +77,7 @@ export const GET: APIRoute = async () => {
       priority: true,
       status: true,
       step: true,
+      partStatusRegistry: true,
     },
   });
 
@@ -96,20 +98,22 @@ export const PATCH: APIRoute = async ({ request }) => {
   }
 
   const updatedWorkOrder = await prisma.workOrder.update({
-    where: { workOrder: parseInt(workOrder) },
+    where: { workOrder: workOrder },
     data: {
       statusId: parseInt(statusId),
+      receivedAt: fromDateToString(new Date(Date.now())),
+      rejected: rejected,
     },
     include: { partStatusRegistry: true },
   });
 
   if (updatedWorkOrder) {
-    const newRegistryEntry = await prisma.workOrderStatusRegistry.create({
+    await prisma.workOrderStatusRegistry.create({
       data: {
         workOrderId: updatedWorkOrder.id,
         startedAt: fromDateToString(new Date(Date.now())),
         statusId: updatedWorkOrder.statusId,
-        rejected: rejected,
+        rejected: updatedWorkOrder.rejected,
       },
     });
   }
