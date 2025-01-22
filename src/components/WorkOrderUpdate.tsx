@@ -58,17 +58,17 @@ export default function WorkOrderUpdate() {
   }
 
   async function retire(workOrder: any) {
-    await fetch("/api/workOrder", {
-      method: "PATCH",
-      body: JSON.stringify({
-        workOrder: workOrder,
-        rejected: false,
-        statusId: 3,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    // await fetch("/api/workOrder", {
+    //   method: "PATCH",
+    //   body: JSON.stringify({
+    //     workOrder: workOrder,
+    //     rejected: false,
+    //     statusId: 3,
+    //   }),
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // });
   }
 
   function showForm() {
@@ -107,10 +107,11 @@ export default function WorkOrderUpdate() {
   }
 
   return (
-    <div class="h-screen flex flex-col">
+    <div>
       <div class="navbar bg-base-100">
         <div class="navbar-start">
           <a class="btn btn-ghost text-xl">CMM Dashboard</a>
+          <img src="../logo.png" width={"150"} />
         </div>
         <div class="navbar-center gap-1">
           <div class="badge badge-success">Priodidad Baja</div>
@@ -121,20 +122,20 @@ export default function WorkOrderUpdate() {
           <button onClick={showForm} class="btn btn-info">
             Agregar WorkOrder
           </button>
-          <button class="btn btn-primary">Cerrar Sesión</button>
+          {/* <button class="btn btn-primary">Cerrar Sesión</button> */}
         </div>
       </div>
 
-      <div class="bg-base-200 grow">
+      <div>
         <dialog ref={rejectModalRef} id="modal" class="modal">
           <div className="modal-box">
             <h2 class="card-title">Liberar Pieza</h2>
             <p>Indica si la pieza fue aceptada o rechazada.</p>
-            <div class="card-actions justify-end">
-              <button onClick={accept} class="btn btn-primary">
+            <div class="card-actions justify-center">
+              <button onClick={accept} class="btn btn-success">
                 Aceptar
               </button>
-              <button onClick={reject} class="btn btn-ghost">
+              <button onClick={reject} class="btn btn-error">
                 Rechazar
               </button>
             </div>
@@ -154,48 +155,49 @@ export default function WorkOrderUpdate() {
         </dialog>
 
         <div class="grid grid-cols-3 ">
-          <div class="grid grid-flow-row auto-rows-max ">
+          <div class="flex flex-col">
             <div class="text-5xl font-bold text-center mb-4 px-5">
-              En Standby
+              Standby
             </div>
             {data.map((workOrder: any) =>
               workOrder.statusId === 1 ? (
                 <Card
                   workOrder={workOrder}
                   onButtonClick={measure}
-                  buttonText="Medir"
+                  buttonText="Medir >"
                 ></Card>
               ) : null
             )}
           </div>
 
-          <div class="grid grid-flow-row auto-rows-max ">
+          <div class="flex flex-col ">
             <div class="text-5xl font-bold text-center mb-4 px-5">Midiendo</div>
             {data.map((workOrder: any) =>
               workOrder.statusId === 2 ? (
                 <Card
                   workOrder={workOrder}
                   onButtonClick={showReject}
-                  buttonText="Liberar"
+                  buttonText="Liberar >"
                 ></Card>
               ) : null
             )}
           </div>
 
-          <div class="grid grid-flow-row auto-rows-max ">
-            <div class="text-5xl font-bold text-center mb-4 px-5">
-              Liberadas
+          <div class="flex flex-col">
+            <div class="bg-success text-5xl font-bold text-center mb-4 px-5">
+              Terminado
             </div>
             {data.map((workOrder: any) =>
               workOrder.statusId === 3 ? (
                 <Card
                   workOrder={workOrder}
-                  onButtonClick={retire}
-                  buttonText="Retirar"
+                // onButtonClick={retire}
+                // buttonText="Retirar"
                 ></Card>
               ) : null
             )}
           </div>
+
         </div>
       </div>
     </div>

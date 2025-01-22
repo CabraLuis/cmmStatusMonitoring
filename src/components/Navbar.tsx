@@ -13,6 +13,7 @@ export default function Navbar(props: NavbarProps) {
         <div class="navbar bg-base-100">
             <div class="navbar-start">
                 <a class="btn btn-ghost text-xl">{props.title}</a>
+                <img src="logo.png" width={"150"} />
             </div>
             {props.children}
             <div class="navbar-end">

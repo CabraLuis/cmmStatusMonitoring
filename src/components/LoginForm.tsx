@@ -1,7 +1,6 @@
 import { useState } from "preact/hooks";
 import Navbar from "./Navbar";
 
-// Hora y fecha de liberacion agregar
 export default function LoginForm() {
     const [formData, setFormData] = useState({
         email: "",
@@ -10,14 +9,14 @@ export default function LoginForm() {
 
     async function submit(e: Event) {
         e.preventDefault()
-       let response = await fetch('/api/login', {
+        let response = await fetch('/api/login', {
             method: 'POST',
             body: JSON.stringify({ user: formData }), headers: { 'Content-Type': 'application/json' }
         })
 
         let message = await response.json()
         if (message.message == "OK") {
-            window.location.href="/cmm"
+            window.location.href = "/cmm"
         }
     }
 

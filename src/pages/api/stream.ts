@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
 import CMMController from "../../lib/controller";
 
-export const GET: APIRoute = async ({ request }) => {
+export const GET: APIRoute = async () => {
   let sendEvent: () => void;
   const stream = new ReadableStream({
     start(controller) {

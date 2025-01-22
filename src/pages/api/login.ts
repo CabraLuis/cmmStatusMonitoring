@@ -3,7 +3,6 @@ import { prisma } from "../../lib/prisma";
 
 export const POST: APIRoute = async ({ request, cookies }) => {
   const { user } = await request.json();
-  console.log(user);
   const authorizedUser = await prisma.authorizedUser.findUnique({
     where: { email: user.email, password: user.password },
   });
@@ -13,5 +12,5 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
 
   cookies.set("auth", "1", { path: "/" });
-  return new Response(JSON.stringify({message:"OK"}), { status: 200 });
+  return new Response(JSON.stringify({ message: "OK" }), { status: 200 });
 };

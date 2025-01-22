@@ -4,6 +4,7 @@ import { prisma } from "../../lib/prisma";
 
 export const POST: APIRoute = async ({ request }) => {
   const { workOrder } = await request.json();
+
   const newPart = await prisma.part.upsert({
     where: {
       number: workOrder.part,
@@ -56,12 +57,13 @@ export const POST: APIRoute = async ({ request }) => {
     },
   });
 
-  const newRegistryEntry = await prisma.workOrderStatusRegistry.create({
+  await prisma.workOrderStatusRegistry.create({
     data: {
       workOrderId: newWorkOrder.id,
       statusId: newWorkOrder.statusId,
       startedAt: newWorkOrder.receivedAt,
       rejected: newWorkOrder.rejected,
+      elapsedTime: 0,
     },
   });
 
@@ -101,22 +103,45 @@ export const PATCH: APIRoute = async ({ request }) => {
     where: { workOrder: workOrder },
     data: {
       statusId: parseInt(statusId),
-      receivedAt: fromDateToString(new Date(Date.now())),
       rejected: rejected,
     },
     include: { partStatusRegistry: true },
   });
 
   if (updatedWorkOrder) {
-    await prisma.workOrderStatusRegistry.create({
+    const regUpdate = await prisma.workOrderStatusRegistry.create({
       data: {
         workOrderId: updatedWorkOrder.id,
         startedAt: fromDateToString(new Date(Date.now())),
         statusId: updatedWorkOrder.statusId,
         rejected: updatedWorkOrder.rejected,
+        elapsedTime: 0,
+      },
+    });
+
+    await prisma.workOrderStatusRegistry.update({
+      where: {
+        id: regUpdate.id - 1,
+      },
+      data: {
+        elapsedTime: Math.round(
+          (new Date(Date.now()).getTime() -
+            new Date(Date.now()).getTimezoneOffset() * 60000 -
+            new Date(updatedWorkOrder.receivedAt).valueOf()) /
+            1000 /
+            60
+        ),
       },
     });
   }
+
+  await prisma.workOrder.update({
+    where: { workOrder: workOrder },
+    data: {
+      receivedAt: fromDateToString(new Date(Date.now())),
+    },
+    include: { partStatusRegistry: true },
+  });
 
   CMMController.getInstance().addOrUpdate();
   return new Response(null, { status: 201 });

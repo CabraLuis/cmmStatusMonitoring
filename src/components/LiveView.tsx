@@ -31,7 +31,7 @@ export default function LiveView() {
       </Navbar>
       <div class="grid grid-cols-3 ">
         <div class="grid grid-flow-row auto-rows-max ">
-          <div class="text-5xl font-bold text-center mb-4 px-5">En Standby</div>
+          <div class="text-5xl font-bold text-center mb-4 px-5">Standby</div>
           {data.map((workOrder: any) =>
             workOrder.statusId === 1 ? (
               <Card workOrder={workOrder}></Card>
@@ -49,7 +49,7 @@ export default function LiveView() {
         </div>
 
         <div class="grid grid-flow-row auto-rows-max ">
-          <div class="text-5xl font-bold text-center mb-4 px-5">Liberadas</div>
+          <div class="text-5xl font-bold text-center mb-4 px-5">Terminado</div>
           {data.map((workOrder: any) =>
             workOrder.statusId === 3 ? (
               <Card workOrder={workOrder}></Card>
