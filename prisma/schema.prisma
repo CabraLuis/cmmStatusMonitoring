@@ -25,6 +25,7 @@ model WorkOrder {
   statusId      Int
   estimatedTime Int
   rejected      Boolean
+  delay         Int
 
   partStatusRegistry WorkOrderStatusRegistry[]
 
