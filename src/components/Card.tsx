@@ -1,4 +1,6 @@
 import type { Prisma } from "@prisma/client";
+import dayjs from "dayjs";
+import { useEffect, useState } from "preact/hooks";
 
 type WorkOrder = Prisma.WorkOrderGetPayload<{
   include: {
@@ -22,10 +24,25 @@ export default function Card({
   onButtonClick,
   buttonText,
 }: CardProps) {
+  const [counter, setCounter] = useState("")
   // Cambiar orden de prioridades
   let prioritybg;
   let statusText;
   let border
+  let dateWO = dayjs(workOrder.receivedAt).add(6, 'h')
+  let seconds
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      seconds = dayjs().diff(dateWO, "seconds")
+      let a = new Date(seconds * 1000).toISOString().substring(11, 19)
+
+
+      console.log(dayjs(dateWO).format('DD/MM/YYYY HH:mm'))
+      setCounter(a)
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [counter])
 
   switch (workOrder.priorityId) {
     case 1:
@@ -77,8 +94,15 @@ export default function Card({
     <div
       class={`stats grid-cols-2 mb-3 mx-4 bg-base-100 ${border} border-4 relative`}
     >
+      {
+        parseInt(parseInt(counter.substring(0, 3)) * 60 + counter.substring(3, 5)) > workOrder.estimatedTime &&
+        <div class="font-bold text-red-500 italic right-0 top-6 left-0 text-center absolute">RETARDO</div>
+      }
       <div class="stat place-items-center relative ">
-        <div class={`font-bold italic badge badge-lg absolute bottom-0 left-0 ${prioritybg}`}>RETRASO</div>
+
+        <div class={`badge badge-lg absolute bottom-0 left-0 ${prioritybg}`}>
+
+        </div>
         <div class="stat-title text-black text-lg font-bold">
           {workOrder.part.number} ({workOrder.quantity} pz)
         </div>
@@ -88,7 +112,13 @@ export default function Card({
         </div>
       </div>
       <div class="absolute justify-self-center bg-base-200 text-xl">
-        10:00:00
+        {/* ESTE ES EL TIMER */}
+        {
+          workOrder.statusId === 2 &&
+          <>
+            {counter}
+          </>
+        }
       </div>
       <div class="stat place-items-center relative">
         {onButtonClick && (
@@ -99,7 +129,7 @@ export default function Card({
           </div>
         )}
 
-        <div class="stat-title text-black text-lg font-bold">Entregado por</div>
+        <div class="stat-title text-black text-lg font-bold">Entregó</div>
         <div class="stat-value text-3xl">{workOrder.area.area}</div>
         <div class="stat-desc text-black text-lg font-bold">
           {statusText}

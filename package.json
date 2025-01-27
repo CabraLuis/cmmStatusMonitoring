@@ -3,10 +3,11 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev --port 3932 --host",
+    "dev": "astro dev --port 3932",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "resetdb": "node prisma/clear.ts"
   },
   "dependencies": {
     "@astrojs/node": "^9.0.0",
@@ -15,6 +16,7 @@
     "@prisma/client": "^6.2.1",
     "@types/node": "^22.10.5",
     "astro": "^5.1.5",
+    "dayjs": "^1.11.13",
     "preact": "^10.25.4",
     "simple-datatables": "^9.2.1",
     "tailwindcss": "^3.4.17"
