@@ -1,10 +1,10 @@
 import { useEffect, useState } from "preact/hooks";
 
 interface WOFormProps {
-  closeForm: Function;
+  closeForm: Function; counterKey: any
 }
 
-export default function WorkOrderForm({ closeForm }: WOFormProps) {
+export default function WorkOrderForm({ closeForm, counterKey }: WOFormProps) {
   const fields = {
     part: "",
     workOrder: "",
@@ -22,14 +22,15 @@ export default function WorkOrderForm({ closeForm }: WOFormProps) {
   const [steps, setSteps] = useState([]);
   const [areas, setAreas] = useState([]);
 
+  async function getInfo() {
+    let response = await fetch("/api/info");
+    let data = await response.json();
+    setParts(data.info.parts);
+    setSteps(data.info.steps);
+    setAreas(data.info.areas);
+  }
+
   useEffect(() => {
-    async function getInfo() {
-      let response = await fetch("/api/info");
-      let data = await response.json();
-      setParts(data.info.parts);
-      setSteps(data.info.steps);
-      setAreas(data.info.areas);
-    }
     getInfo();
   }, []);
 
@@ -46,10 +47,11 @@ export default function WorkOrderForm({ closeForm }: WOFormProps) {
     });
     setFormData({ ...fields });
     closeForm();
+    getInfo();
   }
 
   return (
-    <form onSubmit={submit}>
+    <form key={counterKey} onSubmit={submit}>
       <div class="form-control">
         <label class="label">
           <span class="label-text">Número de Parte</span>

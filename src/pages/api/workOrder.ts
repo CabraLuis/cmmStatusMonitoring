@@ -119,7 +119,9 @@ export const PATCH: APIRoute = async ({ request }) => {
       },
     });
 
-    await prisma.workOrderStatusRegistry.update({
+    // NO PUEDE SER EL REGISTRO PREVIO
+
+    const prevWOReg = await prisma.workOrderStatusRegistry.update({
       where: {
         id: regUpdate.id - 1,
       },
@@ -133,6 +135,19 @@ export const PATCH: APIRoute = async ({ request }) => {
         ),
       },
     });
+
+    if (statusId === 3) {
+      await prisma.workOrder.update({
+        where: { workOrder: workOrder },
+        data: {
+          timeDelayed: Math.round(
+            (regUpdate.startedAt.getTime() - prevWOReg.startedAt.getTime()) /
+              60000 -
+              updatedWorkOrder.estimatedTime
+          ),
+        },
+      });
+    }
   }
 
   await prisma.workOrder.update({

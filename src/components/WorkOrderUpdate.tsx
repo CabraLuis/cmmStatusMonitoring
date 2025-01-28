@@ -7,10 +7,10 @@ import { createRef } from "preact";
 export default function WorkOrderUpdate() {
   const [data, setData] = useState([]);
   const [wo, setWO] = useState(null);
-
+  const [counterKey, setCounterKey] = useState(0)
+  const [timeDelayedAux, setTimeDelayedAux] = useState(null)
   let formModalRef = createRef<HTMLDialogElement>();
   let rejectModalRef = createRef<HTMLDialogElement>();
-
 
   useEffect(() => {
     async function getInfo() {
@@ -28,7 +28,7 @@ export default function WorkOrderUpdate() {
     return () => eventSource.close();
   }, []);
 
-  async function measure(workOrder: any) {
+  async function measure(workOrder: any, timeDelayed: any) {
     await fetch("/api/workOrder", {
       method: "PATCH",
       body: JSON.stringify({
@@ -50,6 +50,7 @@ export default function WorkOrderUpdate() {
           workOrder: wo,
           rejected: rejected,
           statusId: 3,
+          timeDelayed: timeDelayedAux
         }),
         headers: {
           "Content-Type": "application/json",
@@ -67,11 +68,13 @@ export default function WorkOrderUpdate() {
   function closeForm() {
     setTimeout(() => {
       formModalRef.current?.close();
+      setCounterKey(counterKey + 1)
     }, 0);
   }
 
-  function showReject(workOrder: any) {
+  function showReject(workOrder: any, timeDelayed: any) {
     setTimeout(() => {
+      setTimeDelayedAux(timeDelayed)
       setWO(workOrder);
       rejectModalRef.current?.showModal();
     }, 0);
@@ -148,7 +151,7 @@ export default function WorkOrderUpdate() {
             >
               ✕
             </button>
-            <WorkOrderForm closeForm={closeForm}></WorkOrderForm>
+            <WorkOrderForm counterKey={counterKey} closeForm={closeForm}></WorkOrderForm>
           </div>
         </dialog>
 
@@ -189,8 +192,6 @@ export default function WorkOrderUpdate() {
               workOrder.statusId === 3 ? (
                 <Card
                   workOrder={workOrder}
-                // onButtonClick={retire}
-                // buttonText="Retirar"
                 ></Card>
               ) : null
             )}

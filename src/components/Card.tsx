@@ -25,6 +25,7 @@ export default function Card({
   buttonText,
 }: CardProps) {
   const [counter, setCounter] = useState("")
+  const [isDelayed, setIsDelayed] = useState(false)
   // Cambiar orden de prioridades
   let prioritybg;
   let statusText;
@@ -36,10 +37,11 @@ export default function Card({
     const interval = setInterval(() => {
       seconds = dayjs().diff(dateWO, "seconds")
       let a = new Date(seconds * 1000).toISOString().substring(11, 19)
-
-
-      console.log(dayjs(dateWO).format('DD/MM/YYYY HH:mm'))
       setCounter(a)
+      if (parseInt(counter.substring(3, 5)) >= workOrder.estimatedTime) {
+        setIsDelayed(true)
+      }
+
     }, 1000)
     return () => clearInterval(interval)
   }, [counter])
@@ -94,10 +96,31 @@ export default function Card({
     <div
       class={`stats grid-cols-2 mb-3 mx-4 bg-base-100 ${border} border-4 relative`}
     >
-      {
-        parseInt(parseInt(counter.substring(0, 3)) * 60 + counter.substring(3, 5)) > workOrder.estimatedTime &&
-        <div class="font-bold text-red-500 italic right-0 top-6 left-0 text-center absolute">RETARDO</div>
-      }
+      <div class="absolute justify-self-center text-lg text-wrap w-28 text-center">
+        {/* ESTE ES EL TIMER */}
+
+        {
+          workOrder.statusId === 2 &&
+          <>
+            {counter}
+            {
+              isDelayed &&
+              <div class="font-bold text-red-500 italic right-0 top-6 left-0 text-center absolute">RETARDO</div>
+            }
+          </>
+        }
+
+        {
+          workOrder.statusId === 3 && workOrder.timeDelayed &&
+          (workOrder.timeDelayed >= workOrder.estimatedTime) &&
+          <div class="font-bold text-red-500 italic">RETARDO DE {" "}
+            {
+              workOrder.timeDelayed
+            } min.</div>
+        }
+
+      </div>
+
       <div class="stat place-items-center relative ">
 
         <div class={`badge badge-lg absolute bottom-0 left-0 ${prioritybg}`}>
@@ -111,23 +134,18 @@ export default function Card({
           Step {workOrder.step.step}
         </div>
       </div>
-      <div class="absolute justify-self-center bg-base-200 text-xl">
-        {/* ESTE ES EL TIMER */}
-        {
-          workOrder.statusId === 2 &&
-          <>
-            {counter}
-          </>
-        }
-      </div>
+
+
       <div class="stat place-items-center relative">
-        {onButtonClick && (
-          <div class="absolute top-0 right-0 h-14">
-            <button onClick={handleClick} class="btn btn-info btn-sm">
-              {buttonText}
-            </button>
-          </div>
-        )}
+        {
+          onButtonClick && (
+            <div class="absolute top-0 right-0 h-14">
+              <button onClick={handleClick} class="btn btn-info btn-sm">
+                {buttonText}
+              </button>
+            </div>
+          )
+        }
 
         <div class="stat-title text-black text-lg font-bold">Entregó</div>
         <div class="stat-value text-3xl">{workOrder.area.area}</div>
