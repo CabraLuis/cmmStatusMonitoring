@@ -5,7 +5,6 @@ import Card from "./Card";
 export default function LiveView() {
   const [data, setData] = useState([]);
   useEffect(() => {
-
     async function getInfo() {
       let response = await fetch("api/workOrder");
       let data = await response.json();
@@ -15,11 +14,14 @@ export default function LiveView() {
     getInfo();
 
     const eventSource = new EventSource("/api/stream");
+
     eventSource.onmessage = (event) => {
       getInfo();
-    };
-    return () => eventSource.close();
+    }
+
+    return () => { eventSource.close() };
   }, []);
+
 
   return (
     <div>

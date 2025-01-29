@@ -6,3 +6,10 @@ import Layout from "../layouts/Layout.astro";
 <Layout title="CMM Status">
   <LiveView client:load />
 </Layout>
+
+<script>
+  setInterval(async () => {
+    let response = await fetch("api/ping");
+    console.log("ping");
+  }, 3000);
+</script>

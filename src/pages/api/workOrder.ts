@@ -121,9 +121,10 @@ export const PATCH: APIRoute = async ({ request }) => {
 
     // NO PUEDE SER EL REGISTRO PREVIO
 
-    const prevWOReg = await prisma.workOrderStatusRegistry.update({
+    const prevWOReg = await prisma.workOrderStatusRegistry.updateManyAndReturn({
       where: {
-        id: regUpdate.id - 1,
+        workOrderId: updatedWorkOrder.id,
+        statusId: parseInt(statusId) - 1,
       },
       data: {
         elapsedTime: Math.round(
@@ -141,7 +142,7 @@ export const PATCH: APIRoute = async ({ request }) => {
         where: { workOrder: workOrder },
         data: {
           timeDelayed: Math.round(
-            (regUpdate.startedAt.getTime() - prevWOReg.startedAt.getTime()) /
+            (regUpdate.startedAt.getTime() - prevWOReg[0].startedAt.getTime()) /
               60000 -
               updatedWorkOrder.estimatedTime
           ),

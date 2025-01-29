@@ -3,6 +3,7 @@ import CMMController from "../../lib/controller";
 
 export const GET: APIRoute = async () => {
   let sendEvent: () => void;
+  let ping: () => void;
   const stream = new ReadableStream({
     start(controller) {
       const encoder = new TextEncoder();
@@ -26,6 +27,7 @@ export const GET: APIRoute = async () => {
       "Content-Type": "text/event-stream",
       Connection: "keep-alive",
       "Cache-Control": "no-cache",
+      "X-Accel-Buffering": "no",
     },
   });
 };
