@@ -6,7 +6,7 @@ import { createRef } from "preact";
 
 export default function WorkOrderUpdate() {
   const [data, setData] = useState([]);
-  const [wo, setWO] = useState(null);
+  const [wo, setWO] = useState({});
   const [counterKey, setCounterKey] = useState(0)
   const [timeDelayedAux, setTimeDelayedAux] = useState(null)
   let formModalRef = createRef<HTMLDialogElement>();
@@ -50,7 +50,7 @@ export default function WorkOrderUpdate() {
           workOrder: wo,
           rejected: rejected,
           statusId: 3,
-          timeDelayed: timeDelayedAux
+          timeDelayed: timeDelayedAux,
         }),
         headers: {
           "Content-Type": "application/json",

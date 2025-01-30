@@ -88,7 +88,7 @@ export default function Card({
 
   function handleClick() {
     if (onButtonClick) {
-      onButtonClick(workOrder.workOrder);
+      onButtonClick(workOrder);
     }
   }
 
@@ -112,11 +112,8 @@ export default function Card({
 
         {
           workOrder.statusId === 3 && workOrder.timeDelayed &&
-          (workOrder.timeDelayed >= workOrder.estimatedTime) &&
-          <div class="font-bold text-red-500 italic">RETARDO DE {" "}
-            {
-              workOrder.timeDelayed
-            } min.</div>
+          workOrder.timeDelayed > 0 &&
+          <div class="font-bold text-red-500 italic">RETARDO DE{" "}{workOrder.timeDelayed} min.</div>
         }
 
       </div>
@@ -129,7 +126,7 @@ export default function Card({
         <div class="stat-title text-black text-lg font-bold">
           {workOrder.part.number} ({workOrder.quantity} pz)
         </div>
-        <div class="stat-value text-3xl">{workOrder.workOrder} </div>
+        <div class="stat-value text-3xl">{workOrder.workOrder.split('@').shift()} </div>
         <div class="stat-desc text-black text-xl font-bold">
           Step {workOrder.step.step}
         </div>

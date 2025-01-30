@@ -115,7 +115,7 @@ type WorkOrderStatusRegistry = Prisma.WorkOrderStatusRegistryGetPayload<{
               <tr id={`${workOrder.id}`}>
                 <td>{workOrder.id}</td>
                 <td>{workOrder.workOrder.part.number}</td>
-                <td>{workOrder.workOrder.workOrder}</td>
+                <td>{workOrder.workOrder.workOrder.split("@").shift()}</td>
                 <td>{workOrder.workOrder.quantity} pz.</td>
                 <td>{workOrder.workOrder.step.step}</td>
                 <td>{workOrder.workOrder.estimatedTime} min.</td>

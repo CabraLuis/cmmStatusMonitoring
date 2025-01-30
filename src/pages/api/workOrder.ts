@@ -45,7 +45,7 @@ export const POST: APIRoute = async ({ request }) => {
   const newWorkOrder = await prisma.workOrder.create({
     data: {
       partId: newPart.id,
-      workOrder: workOrder.workOrder,
+      workOrder: workOrder.workOrder + `@${newStep.id}`,
       quantity: parseInt(workOrder.quantity),
       stepId: newStep.id,
       deliveredBy: newArea.id,
@@ -73,6 +73,7 @@ export const POST: APIRoute = async ({ request }) => {
 
 export const GET: APIRoute = async () => {
   const workOrders = await prisma.workOrder.findMany({
+    take: 6,
     include: {
       area: true,
       part: true,
@@ -82,7 +83,7 @@ export const GET: APIRoute = async () => {
       partStatusRegistry: true,
     },
     orderBy: {
-      id: "desc",
+      receivedAt: "desc",
     },
   });
 
@@ -103,7 +104,7 @@ export const PATCH: APIRoute = async ({ request }) => {
   }
 
   const updatedWorkOrder = await prisma.workOrder.update({
-    where: { workOrder: workOrder },
+    where: { workOrder: workOrder.workOrder },
     data: {
       statusId: parseInt(statusId),
       rejected: rejected,
@@ -142,7 +143,7 @@ export const PATCH: APIRoute = async ({ request }) => {
 
     if (statusId === 3) {
       await prisma.workOrder.update({
-        where: { workOrder: workOrder },
+        where: { workOrder: updatedWorkOrder.workOrder },
         data: {
           timeDelayed: Math.round(
             (regUpdate.startedAt.getTime() - prevWOReg[0].startedAt.getTime()) /
@@ -155,7 +156,7 @@ export const PATCH: APIRoute = async ({ request }) => {
   }
 
   await prisma.workOrder.update({
-    where: { workOrder: workOrder },
+    where: { workOrder: workOrder.workOrder },
     data: {
       receivedAt: fromDateToString(new Date(Date.now())),
     },

@@ -3,7 +3,6 @@ import CMMController from "../../lib/controller";
 
 export const GET: APIRoute = async () => {
   let sendEvent: () => void;
-  let ping: () => void;
   const stream = new ReadableStream({
     start(controller) {
       const encoder = new TextEncoder();
