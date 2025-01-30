@@ -81,6 +81,9 @@ export const GET: APIRoute = async () => {
       step: true,
       partStatusRegistry: true,
     },
+    orderBy: {
+      id: "desc",
+    },
   });
 
   return new Response(JSON.stringify(workOrders), {

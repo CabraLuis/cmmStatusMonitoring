@@ -146,7 +146,8 @@ type WorkOrderStatusRegistry = Prisma.WorkOrderStatusRegistryGetPayload<{
                 )}
                 <td>
                   {workOrder.statusId === 2 &&
-                    workOrder.workOrder.timeDelayed != null && (
+                    workOrder.workOrder.timeDelayed != null &&
+                    workOrder.workOrder.timeDelayed > 0 && (
                       <>{workOrder.workOrder.timeDelayed} min.</>
                     )}
                 </td>
