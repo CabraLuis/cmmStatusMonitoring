@@ -10,30 +10,33 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  // url      = env("DATABASE_URL")
+  url      = "postgresql://testCMM:testCMM@localhost:5432/testCMM?schema=public"
 }
 
+// Se necesita una llave compuesta de workOrder y step para poder repetir valores de workOrders
 model WorkOrder {
-  id            Int      @id @default(autoincrement())
-  workOrder     String   @unique
+  workOrder     String
+  stepId        Int
   partId        Int
   quantity      Int
-  stepId        Int
   deliveredBy   Int
-  receivedAt    DateTime
+  startedAt     DateTime
   priorityId    Int
   statusId      Int
   estimatedTime Int
   rejected      Boolean
   timeDelayed   Int?
 
-  partStatusRegistry WorkOrderStatusRegistry[]
+  partStatusRegistry WorkOrderRegistry[]
 
   status   Status   @relation(fields: [statusId], references: [id])
   area     Area     @relation(fields: [deliveredBy], references: [id])
   part     Part     @relation(fields: [partId], references: [id])
   step     Step     @relation(fields: [stepId], references: [id])
   priority Priority @relation(fields: [priorityId], references: [id])
+
+  @@id([workOrder, stepId])
 }
 
 model Status {
@@ -41,20 +44,21 @@ model Status {
   status String @unique
 
   workOrder          WorkOrder[]
-  partStatusRegistry WorkOrderStatusRegistry[]
+  partStatusRegistry WorkOrderRegistry[]
 }
 
-model WorkOrderStatusRegistry {
+model WorkOrderRegistry {
   id          Int      @id @default(autoincrement())
-  workOrderId Int
+  workOrderId String
+  stepId      Int
   statusId    Int
   startedAt   DateTime
-  rejected    Boolean
-  elapsedTime Int
+  rejected    Boolean?
+  elapsedTime Int?
 
   status Status @relation(fields: [statusId], references: [id])
 
-  workOrder WorkOrder @relation(fields: [workOrderId], references: [id])
+  workOrder WorkOrder @relation(fields: [workOrderId, stepId], references: [workOrder, stepId])
 }
 
 model Area {

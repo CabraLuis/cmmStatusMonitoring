@@ -15,7 +15,6 @@
     "@astrojs/preact": "^4.0.1",
     "@astrojs/tailwind": "^5.1.4",
     "@prisma/client": "^6.2.1",
-    "@types/node": "^22.10.5",
     "astro": "^5.1.5",
     "dayjs": "^1.11.13",
     "preact": "^10.25.4",
@@ -23,10 +22,13 @@
     "tailwindcss": "^3.4.17"
   },
   "devDependencies": {
+    "@types/node": "^22.13.1",
     "daisyui": "^4.12.23",
-    "prisma": "^6.2.1"
+    "prisma": "^6.2.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
   },
   "prisma": {
-    "seed": "prisma/seed.ts"
+    "seed": "ts-node prisma/seed.ts"
   }
 }
