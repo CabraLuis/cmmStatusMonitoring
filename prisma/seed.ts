@@ -10,11 +10,7 @@ async function main() {
     ],
   });
   const status = await prisma.status.createMany({
-    data: [
-      { id: 1, status: "Standby" },
-      { id: 2, status: "Midiendo" },
-      { id: 3, status: "Terminado" },
-    ],
+    data: [{}],
   });
   console.log({ priority, status });
 }
