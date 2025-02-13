@@ -10,7 +10,8 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  // url      = env("DATABASE_URL")
+  url      = "postgresql://cmmAdmin:cmm!4dm1n.%21%40%23@localhost:5432/cmmMonitoringDBtest?schema=public"
 }
 
 model WorkOrder {

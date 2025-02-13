@@ -123,23 +123,56 @@ export const PATCH: APIRoute = async ({ request }) => {
       },
     });
 
-    // NO PUEDE SER EL REGISTRO PREVIO
+
+    function isWithinNightTime(date: Date) {
+      const hour = date.getHours();
+      return hour >= 22 || hour < 7;  // Si la hora está entre las 10 PM (22) y las 7 AM
+    }
+    
+    function calculateElapsedTime(startDate: Date, endDate: Date) {
+      let elapsedTime = (endDate.getTime() - startDate.getTime()) / 1000 / 60; // En minutos
+      
+      // Si la fecha de inicio está antes de las 10 PM y la fecha final está después de las 10 PM, ajustamos el tiempo
+      if (isWithinNightTime(startDate) && isWithinNightTime(endDate)) {
+        // Aquí calculas cuántas horas se pasan durante el corte y las restas
+        const pauseStart = new Date(startDate);
+        const pauseEnd = new Date(endDate);
+        
+        // Resta el tiempo de pausa
+        const hoursInPause = Math.min(7, pauseEnd.getHours()) - 22; // Restar tiempo entre las 10 PM y 7 AM
+        elapsedTime -= hoursInPause * 60; // Restar el tiempo nocturno (en minutos)
+      }
+    
+      return elapsedTime;
+    }
 
     const prevWOReg = await prisma.workOrderStatusRegistry.updateManyAndReturn({
-      where: {
-        workOrderId: updatedWorkOrder.id,
-        statusId: parseInt(statusId) - 1,
-      },
-      data: {
-        elapsedTime: Math.round(
-          (new Date(Date.now()).getTime() -
-            new Date(Date.now()).getTimezoneOffset() * 60000 -
-            new Date(updatedWorkOrder.receivedAt).valueOf()) /
-            1000 /
-            60
-        ),
-      },
-    });
+  where: {
+    workOrderId: updatedWorkOrder.id,
+    statusId: parseInt(statusId) - 1,
+  },
+  data: {
+    elapsedTime: Math.round(
+      calculateElapsedTime(new Date(updatedWorkOrder.receivedAt), new Date(Date.now()))
+    ),
+  },
+});
+
+    // const prevWOReg = await prisma.workOrderStatusRegistry.updateManyAndReturn({
+    //   where: {
+    //     workOrderId: updatedWorkOrder.id,
+    //     statusId: parseInt(statusId) - 1,
+    //   },
+    //   data: {
+    //     elapsedTime: Math.round(
+    //       (new Date(Date.now()).getTime() -
+    //         new Date(Date.now()).getTimezoneOffset() * 60000 -
+    //         new Date(updatedWorkOrder.receivedAt).valueOf()) /
+    //         1000 /
+    //         60
+    //     ),
+    //   },
+    // });
 
     if (statusId === 3) {
       await prisma.workOrder.update({

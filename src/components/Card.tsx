@@ -33,18 +33,34 @@ export default function Card({
   let dateWO = dayjs(workOrder.receivedAt).add(6, 'h')
   let seconds
 
+  function isWithinNightTime(date:any) {
+    const hour = date.hour();
+    return hour >= 22 || hour < 7;
+  }
+  
   useEffect(() => {
     const interval = setInterval(() => {
-      seconds = dayjs().diff(dateWO, "seconds")
-      let a = new Date(seconds * 1000).toISOString().substring(11, 19)
-      setCounter(a)
-      if (parseInt(counter.substring(3, 5)) >= workOrder.estimatedTime) {
-        setIsDelayed(true)
+      const now = dayjs();
+      const diffSeconds = now.diff(dateWO, "seconds");
+      let formattedTime = new Date(diffSeconds * 1000).toISOString().substring(11, 19);
+      // Verificar si estamos dentro del corte horario (10 PM - 7 AM)
+      if (isWithinNightTime(now)) {
+        // Si estamos dentro del horario de corte, detener el contador
+        setCounter("00:00:00");  // Pausar el contador
+        return;
       }
-
-    }, 1000)
-    return () => clearInterval(interval)
-  }, [counter])
+  
+      // Si no estamos dentro del horario de corte, continuar calculando el tiempo
+      setCounter(formattedTime);
+  
+      if (parseInt(formattedTime.substring(3, 5)) >= workOrder.estimatedTime) {
+        setIsDelayed(true);
+      }
+    }, 1000);
+  
+    return () => clearInterval(interval);
+  }, [counter]);
+  
 
   switch (workOrder.priorityId) {
     case 1:
