@@ -26,7 +26,9 @@ model WorkOrder {
   estimatedTime Int
   rejected      Boolean
   timeDelayed   Int?
-
+  beeperId      Int?
+  beeperAsignee BeeperAsignee? @relation(fields: [beeperId], references: [id])
+  
   partStatusRegistry WorkOrderStatusRegistry[]
 
   status   Status   @relation(fields: [statusId], references: [id])
@@ -34,6 +36,12 @@ model WorkOrder {
   part     Part     @relation(fields: [partId], references: [id])
   step     Step     @relation(fields: [stepId], references: [id])
   priority Priority @relation(fields: [priorityId], references: [id])
+}
+model BeeperAsignee {
+  id       Int    @id
+  name    String
+
+  WorkOrder WorkOrder[]
 }
 
 model Status {

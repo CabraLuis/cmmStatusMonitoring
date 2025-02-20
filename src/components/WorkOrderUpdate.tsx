@@ -129,7 +129,7 @@ export default function WorkOrderUpdate() {
 
       <div>
         <dialog ref={rejectModalRef} id="modal" class="modal">
-          <div className="modal-box">
+          <div className="modal-box overflow-hidden">
             <h2 class="card-title">Liberar Pieza</h2>
             <p>Indica si la pieza fue aceptada o rechazada.</p>
             <div class="card-actions justify-center">

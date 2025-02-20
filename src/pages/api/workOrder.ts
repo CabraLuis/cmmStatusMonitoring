@@ -54,6 +54,7 @@ export const POST: APIRoute = async ({ request }) => {
       statusId: 1,
       estimatedTime: parseInt(workOrder.estimatedTime),
       rejected: false,
+      beeperId: workOrder.beeperId
     },
   });
 
@@ -66,14 +67,18 @@ export const POST: APIRoute = async ({ request }) => {
       elapsedTime: 0,
     },
   });
-
+  console.log("-----------------------------");
+  console.log(new Date(Date.now()));
+  console.log(workOrder.workOrder);
+  console.log(workOrder.step);
+  console.log("-----------------------------");
   CMMController.getInstance().addOrUpdate();
   return new Response(null, { status: 201 });
 };
 
 export const GET: APIRoute = async () => {
   const workOrders = await prisma.workOrder.findMany({
-    take: 6,
+    take: 18,
     include: {
       area: true,
       part: true,

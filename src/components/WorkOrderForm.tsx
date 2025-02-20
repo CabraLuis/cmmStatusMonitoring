@@ -15,6 +15,7 @@ export default function WorkOrderForm({ closeForm, counterKey }: WOFormProps) {
     priority: "",
     estimatedTime: "",
     rejected: false,
+    beeperId: 1,
   };
 
   const [formData, setFormData] = useState(fields);
@@ -199,6 +200,31 @@ export default function WorkOrderForm({ closeForm, counterKey }: WOFormProps) {
           <option value="3">Baja</option>
         </select>
       </label>
+
+      <label class="form-control w-full">
+        <div class="label">
+          <span class="label-text">Número de Beeper (opcional)</span>
+        </div>
+        <select
+          class="select select-bordered"
+          onChange={(e: any) =>
+            setFormData({ ...formData, beeperId: e.target.value })
+          }
+        >
+          <option disabled selected>
+            Selecciona
+          </option>
+          <option value="1">1 - Martin Almora</option>
+          <option value="2">2 - Ramiro Lopez</option>
+          <option value="3">3 - Misael Santiago</option>
+          <option value="4">4 - Amado Orta</option>
+          <option value="5">5 - Daniel Olivares</option>
+          <option value="6">6 - Alberto Esmeralda</option>
+          <option value="7">7 - Francisco Flores</option>
+          <option value="8">8 - Manuel Herrera</option>
+        </select>
+      </label>
+
       <div class="form-control mt-6">
         <button class="btn btn-success text-xl">Agregar</button>
       </div>
