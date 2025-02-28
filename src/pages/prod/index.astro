@@ -1,17 +1,16 @@
 ---
-import { undefined } from "astro:schema";
-import LoginForm from "../../components/LoginForm";
 import Layout from "../../layouts/Layout.astro";
+import LoginForm from "../../components/LoginForm";
 
 if (Astro.cookies.has("auth")) {
   const cookie = Astro.cookies.get("auth");
   const value = cookie?.number();
-  if (value == 1 && !isNaN(value)) {
-    return Astro.redirect("cmm/board");
+  if (value == 2 && !isNaN(value)) {
+    return Astro.redirect("prod/board");
   }
 }
 ---
 
-<Layout title="CMM Login">
+<Layout title="Prod Login">
   <LoginForm client:load />
 </Layout>

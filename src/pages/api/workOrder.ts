@@ -54,7 +54,7 @@ export const POST: APIRoute = async ({ request }) => {
       statusId: 1,
       estimatedTime: parseInt(workOrder.estimatedTime),
       rejected: false,
-      beeperId: workOrder.beeperId
+      beeperId: parseInt(workOrder.beeperId),
     },
   });
 
@@ -128,7 +128,13 @@ export const PATCH: APIRoute = async ({ request }) => {
       },
     });
 
-    // NO PUEDE SER EL REGISTRO PREVIO
+    function calcElapsed(startDate: Date, endDate: Date) {
+      var e = Math.round((startDate.getTime() - startDate.getTimezoneOffset() * 60000 - endDate.valueOf()) / 1000 / 60);
+      if (startDate.getDate != endDate.getDate) {
+          e -= 480;
+      }
+      return e
+    }
 
     const prevWOReg = await prisma.workOrderStatusRegistry.updateManyAndReturn({
       where: {
@@ -136,13 +142,7 @@ export const PATCH: APIRoute = async ({ request }) => {
         statusId: parseInt(statusId) - 1,
       },
       data: {
-        elapsedTime: Math.round(
-          (new Date(Date.now()).getTime() -
-            new Date(Date.now()).getTimezoneOffset() * 60000 -
-            new Date(updatedWorkOrder.receivedAt).valueOf()) /
-            1000 /
-            60
-        ),
+        elapsedTime: calcElapsed(new Date(Date.now()), new Date(updatedWorkOrder.receivedAt))
       },
     });
 

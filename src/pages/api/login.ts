@@ -11,6 +11,13 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return new Response(null, { status: 401 });
   }
 
-  cookies.set("auth", "1", { path: "/" });
-  return new Response(JSON.stringify({ message: "OK" }), { status: 200 });
+  cookies.set("auth", `${authorizedUser.id}`, { path: "/" });
+
+  if (authorizedUser.id === 1) {
+    return new Response(JSON.stringify({ message: "CMM" }), { status: 200 });
+  } else if (authorizedUser.id === 2) {
+    return new Response(JSON.stringify({ message: "PROD" }), { status: 200 });
+  } else {
+    return new Response(null, { status: 401 });
+  }
 };

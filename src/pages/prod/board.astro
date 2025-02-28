@@ -1,0 +1,12 @@
+---
+import WorkOrderUpdate from "../../components/PROD/WorkOrderUpdate";
+import LoggedLayout from "../../layouts/LoggedLayout.astro";
+
+if (!Astro.cookies.has("auth")) {
+  return Astro.redirect("/prod");
+}
+---
+
+<LoggedLayout title="Production Dashboard">
+  <WorkOrderUpdate client:load />
+</LoggedLayout>

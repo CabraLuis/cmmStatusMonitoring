@@ -1,10 +1,10 @@
 import { useEffect, useState } from "preact/hooks";
 
 interface WOFormProps {
-  closeForm: Function; counterKey: any
+  closeForm: Function;
 }
 
-export default function WorkOrderForm({ closeForm, counterKey }: WOFormProps) {
+export default function WorkOrderForm({ closeForm }: WOFormProps) {
   const fields = {
     part: "",
     workOrder: "",
@@ -12,16 +12,17 @@ export default function WorkOrderForm({ closeForm, counterKey }: WOFormProps) {
     step: "",
     area: "",
     receivedAt: new Date(Date.now()),
-    priority: "",
+    priority: 1,
     estimatedTime: "",
     rejected: false,
-    beeperId: 1,
+    beeperId: null,
   };
 
   const [formData, setFormData] = useState(fields);
   const [parts, setParts] = useState([]);
   const [steps, setSteps] = useState([]);
   const [areas, setAreas] = useState([]);
+  const [beepers, setBeepers] = useState([]);
 
   async function getInfo() {
     let response = await fetch("/api/info");
@@ -29,6 +30,7 @@ export default function WorkOrderForm({ closeForm, counterKey }: WOFormProps) {
     setParts(data.info.parts);
     setSteps(data.info.steps);
     setAreas(data.info.areas);
+    setBeepers(data.info.beepers);
   }
 
   useEffect(() => {
@@ -52,7 +54,7 @@ export default function WorkOrderForm({ closeForm, counterKey }: WOFormProps) {
   }
 
   return (
-    <form key={counterKey} onSubmit={submit}>
+    <form onSubmit={submit}>
       <div class="form-control">
         <label class="label">
           <span class="label-text">Número de Parte</span>
@@ -131,22 +133,6 @@ export default function WorkOrderForm({ closeForm, counterKey }: WOFormProps) {
 
       <div class="form-control">
         <label class="label">
-          <span class="label-text">Tiempo Estimado (minutos)</span>
-        </label>
-        <input
-          type="number"
-          placeholder="Ingrese tiempo estimado de medición"
-          class="input input-bordered"
-          required
-          onChange={(e: any) =>
-            setFormData({ ...formData, estimatedTime: e.target.value })
-          }
-          value={formData.estimatedTime}
-        />
-      </div>
-
-      <div class="form-control">
-        <label class="label">
           <span class="label-text">Departamento Que Entrega</span>
         </label>
         <input
@@ -184,25 +170,6 @@ export default function WorkOrderForm({ closeForm, counterKey }: WOFormProps) {
 
       <label class="form-control w-full">
         <div class="label">
-          <span class="label-text">Prioridad</span>
-        </div>
-        <select
-          class="select select-bordered"
-          onChange={(e: any) =>
-            setFormData({ ...formData, priority: e.target.value })
-          }
-        >
-          <option disabled selected>
-            Selecciona
-          </option>
-          <option value="1">Alta</option>
-          <option value="2">Media</option>
-          <option value="3">Baja</option>
-        </select>
-      </label>
-
-      <label class="form-control w-full">
-        <div class="label">
           <span class="label-text">Número de Beeper (opcional)</span>
         </div>
         <select
@@ -214,14 +181,11 @@ export default function WorkOrderForm({ closeForm, counterKey }: WOFormProps) {
           <option disabled selected>
             Selecciona
           </option>
-          <option value="1">1 - Martin Almora</option>
-          <option value="2">2 - Ramiro Lopez</option>
-          <option value="3">3 - Misael Santiago</option>
-          <option value="4">4 - Amado Orta</option>
-          <option value="5">5 - Daniel Olivares</option>
-          <option value="6">6 - Alberto Esmeralda</option>
-          <option value="7">7 - Francisco Flores</option>
-          <option value="8">8 - Manuel Herrera</option>
+          {beepers.map((beeper: any) => (
+            <option value={beeper.id}>
+              {beeper.id} - {beeper.name}
+            </option>
+          ))}
         </select>
       </label>
 

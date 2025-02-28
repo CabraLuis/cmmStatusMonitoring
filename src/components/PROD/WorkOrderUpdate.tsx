@@ -1,14 +1,13 @@
 import { useEffect, useRef, useState } from "preact/hooks";
-import Navbar from "./Navbar";
+import Navbar from "../Navbar";
 import WorkOrderForm from "./WorkOrderForm";
-import Card from "./Card";
+import Card from "../Card";
 import { createRef } from "preact";
 
 export default function WorkOrderUpdate() {
   const [data, setData] = useState([]);
   const [wo, setWO] = useState({});
   const [counterKey, setCounterKey] = useState(0)
-  const [timeDelayedAux, setTimeDelayedAux] = useState(null)
   let formModalRef = createRef<HTMLDialogElement>();
   let rejectModalRef = createRef<HTMLDialogElement>();
 
@@ -28,29 +27,13 @@ export default function WorkOrderUpdate() {
     return () => eventSource.close();
   }, []);
 
-  async function measure(workOrder: any, timeDelayed: any) {
-    await fetch("/api/workOrder", {
-      method: "PATCH",
-      body: JSON.stringify({
-        workOrder: workOrder,
-        rejected: false,
-        statusId: 2,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  }
-
-  async function finalize(rejected: boolean) {
+  async function changePriority(priority: any) {
     if (wo) {
       await fetch("/api/workOrder", {
         method: "PATCH",
         body: JSON.stringify({
           workOrder: wo,
-          rejected: rejected,
-          statusId: 3,
-          timeDelayed: timeDelayedAux,
+          priority: priority,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -72,9 +55,8 @@ export default function WorkOrderUpdate() {
     }, 0);
   }
 
-  function showReject(workOrder: any, timeDelayed: any) {
+  function showPriorityForm(workOrder: any, priority: any) {
     setTimeout(() => {
-      setTimeDelayedAux(timeDelayed)
       setWO(workOrder);
       rejectModalRef.current?.showModal();
     }, 0);
@@ -86,13 +68,18 @@ export default function WorkOrderUpdate() {
     }, 0);
   }
 
-  function accept() {
-    finalize(false);
+  function low() {
+    changePriority(1);
     closeReject();
   }
 
-  async function reject() {
-    finalize(true);
+  async function medium() {
+    changePriority(true);
+    closeReject();
+  }
+
+  async function high() {
+    changePriority(3);
     closeReject();
   }
 
@@ -123,7 +110,6 @@ export default function WorkOrderUpdate() {
           <button onClick={showForm} class="btn btn-info">
             Agregar WorkOrder
           </button>
-          {/* <button class="btn btn-primary">Cerrar Sesión</button> */}
         </div>
       </div>
 
@@ -133,11 +119,14 @@ export default function WorkOrderUpdate() {
             <h2 class="card-title">Liberar Pieza</h2>
             <p>Indica si la pieza fue aceptada o rechazada.</p>
             <div class="card-actions justify-center">
-              <button onClick={accept} class="btn btn-success">
-                Aceptar
+              <button onClick={low} class="btn btn-success">
+                Prioridad Baja
               </button>
-              <button onClick={reject} class="btn btn-error">
-                Rechazar
+              <button onClick={medium} class="btn btn-warning">
+                Prioridad Media
+              </button>
+              <button onClick={high} class="btn btn-error">
+                Prioridad Alta
               </button>
             </div>
           </div>
@@ -151,7 +140,7 @@ export default function WorkOrderUpdate() {
             >
               ✕
             </button>
-            <WorkOrderForm counterKey={counterKey} closeForm={closeForm}></WorkOrderForm>
+            <WorkOrderForm closeForm={closeForm}></WorkOrderForm>
           </div>
         </dialog>
 
@@ -164,8 +153,8 @@ export default function WorkOrderUpdate() {
               workOrder.statusId === 1 ? (
                 <Card
                   workOrder={workOrder}
-                  onButtonClick={measure}
-                  buttonText="Medir >"
+                  onButtonClick={showPriorityForm}
+                  buttonText="Prioridad"
                 ></Card>
               ) : null
             )}
@@ -177,8 +166,6 @@ export default function WorkOrderUpdate() {
               workOrder.statusId === 2 ? (
                 <Card
                   workOrder={workOrder}
-                  onButtonClick={showReject}
-                  buttonText="Liberar >"
                 ></Card>
               ) : null
             )}

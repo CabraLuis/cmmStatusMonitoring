@@ -34,7 +34,7 @@ export default function Card({
 
   function isWithinNightTime(date: any) {
     const hour = date.hour();
-    return hour >= 22 || hour < 7;
+    return hour >= 23 || hour < 7;
   }
 
   useEffect(() => {
@@ -44,14 +44,11 @@ export default function Card({
       let formattedTime = new Date(diffSeconds * 1000)
         .toISOString()
         .substring(11, 19);
-      // Verificar si estamos dentro del corte horario (10 PM - 7 AM)
       if (isWithinNightTime(now)) {
-        // Si estamos dentro del horario de corte, detener el contador
-        setCounter("00:00:00"); // Pausar el contador
+        setCounter("00:00:00"); 
         return;
       }
 
-      // Si no estamos dentro del horario de corte, continuar calculando el tiempo
       setCounter(formattedTime);
 
       if (
@@ -154,7 +151,7 @@ export default function Card({
         </div>
         {workOrder.beeperId && (
           <div class="text-center absolute bottom-0 right-0 left-0 font-bold text-blue-500 italic">
-            Beeper
+            Beeper{" "}
             {workOrder.beeperId}
           </div>
         )}

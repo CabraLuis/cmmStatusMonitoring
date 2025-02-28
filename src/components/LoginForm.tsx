@@ -15,8 +15,11 @@ export default function LoginForm() {
         })
 
         let message = await response.json()
-        if (message.message == "OK") {
+        if (message.message == "CMM") {
             window.location.href = "/cmm"
+        }
+        else if (message.message == "PROD") {
+            window.location.href = "/prod"
         }
     }
 
@@ -27,7 +30,7 @@ export default function LoginForm() {
                 <div class="hero-content flex-col lg:flex-row-reverse">
                     <div class="text-center lg:text-left">
                         <h1 class="text-5xl font-bold">Iniciar Sesión</h1>
-                        <p class="py-6">Ingresa tus credenciales para administrar los status</p>
+                        <p class="py-6">Ingresa tus credenciales para ingresar a la plataforma</p>
                     </div>
                     <div class="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
                         <form onSubmit={submit} class="card-body">
