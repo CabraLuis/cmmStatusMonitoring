@@ -14,8 +14,8 @@ datasource db {
 }
 
 model WorkOrder {
-  id            Int      @id @default(autoincrement())
-  workOrder     String   @unique
+  id            Int            @id @default(autoincrement())
+  workOrder     String         @unique
   partId        Int
   quantity      Int
   stepId        Int
@@ -28,7 +28,9 @@ model WorkOrder {
   timeDelayed   Int?
   beeperId      Int?
   beeperAsignee BeeperAsignee? @relation(fields: [beeperId], references: [id])
-  
+  cmmTechId     Int?
+  cmmTech       CMMTech?       @relation(fields: [cmmTechId], references: [id])
+
   partStatusRegistry WorkOrderStatusRegistry[]
 
   status   Status   @relation(fields: [statusId], references: [id])
@@ -37,9 +39,17 @@ model WorkOrder {
   step     Step     @relation(fields: [stepId], references: [id])
   priority Priority @relation(fields: [priorityId], references: [id])
 }
+
+model CMMTech {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  WorkOrder WorkOrder[]
+}
+
 model BeeperAsignee {
-  id       Int    @id
-  name    String
+  id   Int    @id
+  name String
 
   WorkOrder WorkOrder[]
 }

@@ -5,8 +5,8 @@ import LoginForm from "../../components/LoginForm";
 if (Astro.cookies.has("auth")) {
   const cookie = Astro.cookies.get("auth");
   const value = cookie?.number();
-  if (value == 2 && !isNaN(value)) {
-    return Astro.redirect("prod/board");
+  if (value == 3 && !isNaN(value)) {
+    return Astro.redirect("prodSup/board");
   }
 }
 ---

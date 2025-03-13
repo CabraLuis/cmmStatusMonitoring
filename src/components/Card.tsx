@@ -26,11 +26,10 @@ export default function Card({
 }: CardProps) {
   const [counter, setCounter] = useState("");
   const [isDelayed, setIsDelayed] = useState(false);
-  // Cambiar orden de prioridades
   let prioritybg;
   let statusText;
   let border;
-  let dateWO = dayjs(workOrder.receivedAt).add(6, "h");
+  let dateWO = dayjs(workOrder.receivedAt).add(5, "h");
 
   function isWithinNightTime(date: any) {
     const hour = date.hour();
@@ -45,7 +44,6 @@ export default function Card({
         .toISOString()
         .substring(11, 19);
       if (isWithinNightTime(now)) {
-        setCounter("00:00:00"); 
         return;
       }
 
@@ -61,7 +59,7 @@ export default function Card({
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [counter]);
+  }, [workOrder.receivedAt]);
 
   switch (workOrder.priorityId) {
     case 1:
@@ -151,8 +149,7 @@ export default function Card({
         </div>
         {workOrder.beeperId && (
           <div class="text-center absolute bottom-0 right-0 left-0 font-bold text-blue-500 italic">
-            Beeper{" "}
-            {workOrder.beeperId}
+            Beeper {workOrder.beeperId}
           </div>
         )}
       </div>

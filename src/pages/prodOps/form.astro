@@ -1,14 +1,14 @@
 ---
-import WorkOrderUpdate from "../../components/cmm/WorkOrderUpdate";
 import Navbar from "../../components/Navbar";
+import ProdOps from "../../components/prod/ProdOps";
 import LoggedLayout from "../../layouts/LoggedLayout.astro";
 
 if (!Astro.cookies.has("auth")) {
-  return Astro.redirect("/cmm");
+  return Astro.redirect("/prodOps");
 }
 ---
 
-<LoggedLayout title="CMM Dashboard">
+<LoggedLayout title="Nueva WorkOrder">
   <Navbar client:load />
-  <WorkOrderUpdate client:load />
+  <ProdOps client:load />
 </LoggedLayout>

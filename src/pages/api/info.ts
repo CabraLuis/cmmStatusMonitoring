@@ -15,7 +15,7 @@ export const GET: APIRoute = async () => {
         steps,
         areas,
         status,
-        beepers
+        beepers,
       },
     }),
     { status: 200, headers: { "Content-Type": "application/json" } }

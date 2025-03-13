@@ -1,12 +1,14 @@
 ---
-import WorkOrderUpdate from "../../components/PROD/WorkOrderUpdate";
+import Navbar from "../../components/Navbar";
+import WorkOrderUpdate from "../../components/prod/WorkOrderUpdate";
 import LoggedLayout from "../../layouts/LoggedLayout.astro";
 
 if (!Astro.cookies.has("auth")) {
-  return Astro.redirect("/prod");
+  return Astro.redirect("/prodSup");
 }
 ---
 
 <LoggedLayout title="Production Dashboard">
+  <Navbar client:load />
   <WorkOrderUpdate client:load />
 </LoggedLayout>

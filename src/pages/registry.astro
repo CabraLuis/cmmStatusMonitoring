@@ -12,6 +12,8 @@ const data = await prisma.workOrderStatusRegistry.findMany({
         part: true,
         priority: true,
         step: true,
+        cmmTech: true,
+        beeperAsignee: true,
       },
     },
     status: true,
@@ -27,6 +29,8 @@ type WorkOrderStatusRegistry = Prisma.WorkOrderStatusRegistryGetPayload<{
         part: true;
         priority: true;
         step: true;
+        cmmTech: true;
+        beeperAsignee: true;
       };
     };
     status: true;
@@ -72,13 +76,7 @@ type WorkOrderStatusRegistry = Prisma.WorkOrderStatusRegistryGetPayload<{
 </script>
 
 <Layout title="CMM Registry">
-  <Navbar client:load title="CMM Status" buttonText="Vista en Vivo" path="/">
-    <div class="navbar-center gap-1">
-      <div class="badge badge-success">Priodidad Baja</div>
-      <div class="badge badge-warning">Priodidad Media</div>
-      <div class="badge badge-error">Priodidad Alta</div>
-    </div>
-  </Navbar>
+  <Navbar client:load />
   <div class="bg-base-200 grow">
     <div class="w-full flex justify-center">
       <button class="btn btn-primary btn-sm mt-1" id="export"
@@ -99,8 +97,10 @@ type WorkOrderStatusRegistry = Prisma.WorkOrderStatusRegistryGetPayload<{
             <th>No. WO</th>
             <th>Cantidad</th>
             <th>Step</th>
+            <th>Técnico CMM</th>
             <th>Tiempo Estimado</th>
             <th>Departamento</th>
+            <th>Beeper</th>
             <th>Inicio</th>
             <th>Duración Real</th>
             <th>Prioridad</th>
@@ -118,8 +118,10 @@ type WorkOrderStatusRegistry = Prisma.WorkOrderStatusRegistryGetPayload<{
                 <td>{workOrder.workOrder.workOrder.split("@").shift()}</td>
                 <td>{workOrder.workOrder.quantity} pz.</td>
                 <td>{workOrder.workOrder.step.step}</td>
+                <td>{workOrder.workOrder.cmmTech?.name || null}</td>
                 <td>{workOrder.workOrder.estimatedTime} min.</td>
                 <td>{workOrder.workOrder.area.area}</td>
+                <td>{workOrder.workOrder.beeperId || null}</td>
                 <td>
                   {
                     new Date(new Date(workOrder.startedAt).toUTCString())

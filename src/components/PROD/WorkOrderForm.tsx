@@ -1,7 +1,8 @@
+import type React from "preact/compat";
 import { useEffect, useState } from "preact/hooks";
 
 interface WOFormProps {
-  closeForm: Function;
+  closeForm?: Function;
 }
 
 export default function WorkOrderForm({ closeForm }: WOFormProps) {
@@ -11,7 +12,6 @@ export default function WorkOrderForm({ closeForm }: WOFormProps) {
     quantity: "",
     step: "",
     area: "",
-    receivedAt: new Date(Date.now()),
     priority: 1,
     estimatedTime: "",
     rejected: false,
@@ -23,6 +23,8 @@ export default function WorkOrderForm({ closeForm }: WOFormProps) {
   const [steps, setSteps] = useState([]);
   const [areas, setAreas] = useState([]);
   const [beepers, setBeepers] = useState([]);
+
+  const [counter, setCounter] = useState(0);
 
   async function getInfo() {
     let response = await fetch("/api/info");
@@ -39,7 +41,7 @@ export default function WorkOrderForm({ closeForm }: WOFormProps) {
 
   function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    fetch("/api/workOrder", {
+    fetch("/api/production", {
       method: "POST",
       body: JSON.stringify({
         workOrder: formData,
@@ -49,12 +51,13 @@ export default function WorkOrderForm({ closeForm }: WOFormProps) {
       },
     });
     setFormData({ ...fields });
-    closeForm();
+    if (closeForm) closeForm();
     getInfo();
+    setCounter(counter + 1);
   }
 
   return (
-    <form onSubmit={submit}>
+    <form key={counter} onSubmit={submit}>
       <div class="form-control">
         <label class="label">
           <span class="label-text">Número de Parte</span>
@@ -153,24 +156,9 @@ export default function WorkOrderForm({ closeForm }: WOFormProps) {
         </datalist>
       </div>
 
-      <div class="form-control">
-        <label class="label">
-          <span class="label-text">Recibido</span>
-        </label>
-        <input
-          type="datetime-local"
-          placeholder="Ingrese cantidad"
-          class="input input-bordered"
-          required
-          onChange={(e: any) =>
-            setFormData({ ...formData, receivedAt: e.target.value })
-          }
-        />
-      </div>
-
       <label class="form-control w-full">
         <div class="label">
-          <span class="label-text">Número de Beeper (opcional)</span>
+          <span class="label-text">Número de Beeper</span>
         </div>
         <select
           class="select select-bordered"
@@ -178,9 +166,7 @@ export default function WorkOrderForm({ closeForm }: WOFormProps) {
             setFormData({ ...formData, beeperId: e.target.value })
           }
         >
-          <option disabled selected>
-            Selecciona
-          </option>
+          <option selected>Ninguno / Sin Beeper</option>
           {beepers.map((beeper: any) => (
             <option value={beeper.id}>
               {beeper.id} - {beeper.name}

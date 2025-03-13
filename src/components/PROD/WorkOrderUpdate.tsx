@@ -7,13 +7,13 @@ import { createRef } from "preact";
 export default function WorkOrderUpdate() {
   const [data, setData] = useState([]);
   const [wo, setWO] = useState({});
-  const [counterKey, setCounterKey] = useState(0)
+  const [counterKey, setCounterKey] = useState(0);
   let formModalRef = createRef<HTMLDialogElement>();
   let rejectModalRef = createRef<HTMLDialogElement>();
 
   useEffect(() => {
     async function getInfo() {
-      let response = await fetch("/api/workOrder");
+      let response = await fetch("/api/production");
       let data = await response.json();
       setData(data);
     }
@@ -29,30 +29,17 @@ export default function WorkOrderUpdate() {
 
   async function changePriority(priority: any) {
     if (wo) {
-      await fetch("/api/workOrder", {
+      await fetch("/api/production", {
         method: "PATCH",
         body: JSON.stringify({
           workOrder: wo,
-          priority: priority,
+          priorityId: priority,
         }),
         headers: {
           "Content-Type": "application/json",
         },
       });
     }
-  }
-
-  function showForm() {
-    setTimeout(() => {
-      formModalRef.current?.showModal();
-    }, 0);
-  }
-
-  function closeForm() {
-    setTimeout(() => {
-      formModalRef.current?.close();
-      setCounterKey(counterKey + 1)
-    }, 0);
   }
 
   function showPriorityForm(workOrder: any, priority: any) {
@@ -62,62 +49,34 @@ export default function WorkOrderUpdate() {
     }, 0);
   }
 
-  function closeReject() {
+  function closePriority() {
     setTimeout(() => {
       rejectModalRef.current?.close();
     }, 0);
   }
 
-  function low() {
-    changePriority(1);
-    closeReject();
+  async function low() {
+    changePriority(3);
+    closePriority();
   }
 
   async function medium() {
-    changePriority(true);
-    closeReject();
+    changePriority(2);
+    closePriority();
   }
 
   async function high() {
-    changePriority(3);
-    closeReject();
+    changePriority(1);
+    closePriority();
   }
 
   return (
     <div>
-      <div class="navbar bg-base-100">
-        <div class="navbar-start">
-          <a class="btn btn-ghost text-xl">CMM Dashboard</a>
-          <img src="../logo.png" width={"150"} />
-        </div>
-        <div class="navbar-center gap-1">
-          <div class="badge badge-success">Priodidad Baja</div>
-          <div class="badge badge-warning">Priodidad Media</div>
-          <div class="badge badge-error">Priodidad Alta</div>
-          <div className="divider divider-horizontal"></div>
-          <div class="inline-flex">
-            <div class="content-evenly">Rechazado</div>
-            <svg class="h-10 fill-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" ><path d="m330-288 150-150 150 150 42-42-150-150 150-150-42-42-150 150-150-150-42 42 150 150-150 150 42 42ZM480-80q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-83 31.5-156t86-127Q252-817 325-848.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 82-31.5 155T763-197.5q-54 54.5-127 86T480-80Zm0-60q142 0 241-99.5T820-480q0-142-99-241t-241-99q-141 0-240.5 99T140-480q0 141 99.5 240.5T480-140Zm0-340Z" /></svg>
-          </div>
-
-          <div class="inline-flex">
-            <div class="content-evenly">Aceptado</div>
-            <svg class=" h-10 fill-green-500"
-              xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" ><path d="m421-298 283-283-46-45-237 237-120-120-45 45 165 166Zm59 218q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-83 31.5-156t86-127Q252-817 325-848.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 82-31.5 155T763-197.5q-54 54.5-127 86T480-80Zm0-60q142 0 241-99.5T820-480q0-142-99-241t-241-99q-141 0-240.5 99T140-480q0 141 99.5 240.5T480-140Zm0-340Z" /></svg>
-          </div>
-        </div>
-        <div class="navbar-end gap-2">
-          <button onClick={showForm} class="btn btn-info">
-            Agregar WorkOrder
-          </button>
-        </div>
-      </div>
-
       <div>
         <dialog ref={rejectModalRef} id="modal" class="modal">
           <div className="modal-box overflow-hidden">
-            <h2 class="card-title">Liberar Pieza</h2>
-            <p>Indica si la pieza fue aceptada o rechazada.</p>
+            <h2 class="card-title">Cambiar Prioridad</h2>
+            <p>Indica que prioridad debe tener esta work order.</p>
             <div class="card-actions justify-center">
               <button onClick={low} class="btn btn-success">
                 Prioridad Baja
@@ -132,23 +91,9 @@ export default function WorkOrderUpdate() {
           </div>
         </dialog>
 
-        <dialog ref={formModalRef} id="modal2" class="modal">
-          <div className="modal-box">
-            <button
-              onClick={closeForm}
-              class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-            >
-              ✕
-            </button>
-            <WorkOrderForm closeForm={closeForm}></WorkOrderForm>
-          </div>
-        </dialog>
-
         <div class="grid grid-cols-3 ">
           <div class="flex flex-col">
-            <div class="text-5xl font-bold text-center mb-4 px-5">
-              Standby
-            </div>
+            <div class="text-5xl font-bold text-center mb-4 px-5">Standby</div>
             {data.map((workOrder: any) =>
               workOrder.statusId === 1 ? (
                 <Card
@@ -164,9 +109,7 @@ export default function WorkOrderUpdate() {
             <div class="text-5xl font-bold text-center mb-4 px-5">Midiendo</div>
             {data.map((workOrder: any) =>
               workOrder.statusId === 2 ? (
-                <Card
-                  workOrder={workOrder}
-                ></Card>
+                <Card workOrder={workOrder}></Card>
               ) : null
             )}
           </div>
@@ -177,13 +120,10 @@ export default function WorkOrderUpdate() {
             </div>
             {data.map((workOrder: any) =>
               workOrder.statusId === 3 ? (
-                <Card
-                  workOrder={workOrder}
-                ></Card>
+                <Card workOrder={workOrder}></Card>
               ) : null
             )}
           </div>
-
         </div>
       </div>
     </div>
