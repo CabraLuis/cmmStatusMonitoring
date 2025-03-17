@@ -24,7 +24,7 @@ export const GET: APIRoute = async () => {
       receivedAt: "desc",
     },
   });
-
+  console.log(workOrders)
   return new Response(JSON.stringify(workOrders), {
     status: 200,
     headers: { "Content-Type": "application/json" },

@@ -1,5 +1,5 @@
 import type React from "preact/compat";
-import { useEffect, useState } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 
 interface WOFormProps {
   closeForm?: Function;
@@ -25,6 +25,8 @@ export default function WorkOrderForm({ closeForm }: WOFormProps) {
   const [beepers, setBeepers] = useState([]);
 
   const [counter, setCounter] = useState(0);
+
+  const stepRef = useRef<HTMLInputElement>(null);
 
   async function getInfo() {
     let response = await fetch("/api/info");
@@ -56,6 +58,19 @@ export default function WorkOrderForm({ closeForm }: WOFormProps) {
     setCounter(counter + 1);
   }
 
+  function handleWOChange(e: any) {
+    var workOrder = e.target.value;
+    var workOrderNoStep = workOrder.split("-")[0];
+    var formDataUpdated = { ...formData, workOrder: workOrderNoStep };
+    var step = workOrder.split("-")[1];
+    setFormData(formDataUpdated);
+    if (stepRef.current) {
+      stepRef.current.value = step;
+      formDataUpdated = { ...formDataUpdated, step: step };
+      setFormData(formDataUpdated)
+    }
+  }
+
   return (
     <form key={counter} onSubmit={submit}>
       <div class="form-control">
@@ -63,6 +78,7 @@ export default function WorkOrderForm({ closeForm }: WOFormProps) {
           <span class="label-text">Número de Parte</span>
         </label>
         <input
+          autofocus={true}
           type="text"
           placeholder="Ingrese número"
           class="input input-bordered"
@@ -85,30 +101,15 @@ export default function WorkOrderForm({ closeForm }: WOFormProps) {
           <span class="label-text">Work Order</span>
         </label>
         <input
+          autofocus={true}
           type="text"
           placeholder="Ingrese work order"
           class="input input-bordered"
           required
           onChange={(e: any) =>
-            setFormData({ ...formData, workOrder: e.target.value })
+            handleWOChange(e)
           }
           value={formData.workOrder}
-        />
-      </div>
-
-      <div class="form-control">
-        <label class="label">
-          <span class="label-text">Cantidad de Piezas</span>
-        </label>
-        <input
-          type="number"
-          placeholder="Ingrese cantidad"
-          class="input input-bordered"
-          required
-          onChange={(e: any) =>
-            setFormData({ ...formData, quantity: e.target.value })
-          }
-          value={formData.quantity}
         />
       </div>
 
@@ -117,6 +118,8 @@ export default function WorkOrderForm({ closeForm }: WOFormProps) {
           <span class="label-text">Step</span>
         </label>
         <input
+          ref={stepRef}
+          autofocus={true}
           type="text"
           placeholder="Ingrese número de paso"
           class="input input-bordered"
@@ -136,9 +139,27 @@ export default function WorkOrderForm({ closeForm }: WOFormProps) {
 
       <div class="form-control">
         <label class="label">
+          <span class="label-text">Cantidad de Piezas</span>
+        </label>
+        <input
+          autofocus={true}
+          type="number"
+          placeholder="Ingrese cantidad"
+          class="input input-bordered"
+          required
+          onChange={(e: any) =>
+            setFormData({ ...formData, quantity: e.target.value })
+          }
+          value={formData.quantity}
+        />
+      </div>
+
+      <div class="form-control">
+        <label class="label">
           <span class="label-text">Departamento Que Entrega</span>
         </label>
         <input
+          autofocus={true}
           type="text"
           placeholder="Ingrese departamento"
           class="input input-bordered"
@@ -161,6 +182,7 @@ export default function WorkOrderForm({ closeForm }: WOFormProps) {
           <span class="label-text">Número de Beeper</span>
         </div>
         <select
+          autofocus={true}
           class="select select-bordered"
           onChange={(e: any) =>
             setFormData({ ...formData, beeperId: e.target.value })
