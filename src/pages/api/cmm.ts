@@ -24,7 +24,6 @@ export const GET: APIRoute = async () => {
       receivedAt: "desc",
     },
   });
-  console.log(workOrders)
   return new Response(JSON.stringify(workOrders), {
     status: 200,
     headers: { "Content-Type": "application/json" },
@@ -40,10 +39,10 @@ export const PATCH: APIRoute = async ({ request }) => {
     data: {
       statusId: parseInt(statusId),
       rejected: rejected,
-      estimatedTime: parseInt(estimatedTime),
-      cmmTechId: parseInt(cmmTechId),
+      estimatedTime: estimatedTime != null ? parseInt(estimatedTime) : parseInt(workOrder.estimatedTime),
+      cmmTechId: cmmTechId != null ? parseInt(cmmTechId) : workOrder.cmmTechId,
     },
-    include: { partStatusRegistry: true },
+    include: { partStatusRegistry: true, status: true },
   });
 
   if (updatedWorkOrder) {
@@ -107,10 +106,10 @@ export const PATCH: APIRoute = async ({ request }) => {
   });
 
   console.log("-----------------------------");
-  console.log("NEW WORK ORDER");
-  console.log(fromDateToString(new Date(Date.now())));
-  console.log(updatedWorkOrder.workOrder);
-  console.log(updatedWorkOrder.id);
+  console.log("PATCHED WORK ORDER");
+  console.log("Date: " + fromDateToString(new Date(Date.now())));
+  console.log("WorkOrder No.: " + updatedWorkOrder.workOrder);
+  console.log("WorkOrder ID: " + updatedWorkOrder.id);
   console.log("-----------------------------");
 
   CMMController.getInstance().addOrUpdate();

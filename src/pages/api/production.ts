@@ -72,9 +72,9 @@ export const POST: APIRoute = async ({ request }) => {
   });
   console.log("-----------------------------");
   console.log("NEW WORK ORDER");
-  console.log(fromDateToString(new Date(Date.now())));
-  console.log(newWorkOrder.workOrder);
-  console.log(newWorkOrder.id);
+  console.log("Date: " + fromDateToString(new Date(Date.now())));
+  console.log("WorkOrder No.: " + newWorkOrder.workOrder);
+  console.log("WorkOrder ID: " + newWorkOrder.id);
   console.log("-----------------------------");
   CMMController.getInstance().addOrUpdate();
   return new Response(null, { status: 201 });
@@ -104,7 +104,6 @@ export const GET: APIRoute = async () => {
 
 export const PATCH: APIRoute = async ({ request }) => {
   const { workOrder, priorityId } = await request.json();
-  console.log(priorityId);
   const updatedWorkOrder = await prisma.workOrder.update({
     where: { workOrder: workOrder.workOrder },
     data: {
@@ -115,9 +114,10 @@ export const PATCH: APIRoute = async ({ request }) => {
 
   console.log("-----------------------------");
   console.log("PATCHED WORK ORDER");
-  console.log(fromDateToString(new Date(Date.now())));
-  console.log(updatedWorkOrder.workOrder);
-  console.log(updatedWorkOrder.id);
+  console.log("Date: " + fromDateToString(new Date(Date.now())));
+  console.log("WorkOrder No.: " + updatedWorkOrder.workOrder);
+  console.log("WorkOrder ID: " + updatedWorkOrder.id);
+  console.log("Changed priority: " + priorityId);
   console.log("-----------------------------");
 
   CMMController.getInstance().addOrUpdate();

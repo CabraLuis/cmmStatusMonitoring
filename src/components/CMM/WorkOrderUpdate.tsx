@@ -161,7 +161,7 @@ export default function WorkOrderUpdate() {
                   <option value="1">Gabriel Castro</option>
                   <option value="2">Santos Martínez</option>
                   <option value="3">Nestor Escalante</option>
-                  <option value="4">Nestor Escalante</option>
+                  <option value="4">Pablo Rivera</option>
                 </select>
               </label>
 
