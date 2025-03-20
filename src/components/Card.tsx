@@ -152,6 +152,11 @@ export default function Card({
             Beeper {workOrder.beeperId}
           </div>
         )}
+        {workOrder.employee && (
+          <div class="text-center absolute bottom-0 right-0 left-0 font-bold text-blue-500 italic">
+            Entregó: {workOrder.employee}
+          </div>
+        )}
       </div>
 
       <div class="stat place-items-center relative">

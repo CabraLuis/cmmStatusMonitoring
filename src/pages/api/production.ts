@@ -58,6 +58,7 @@ export const POST: APIRoute = async ({ request }) => {
       estimatedTime: 0,
       rejected: false,
       beeperId: parseInt(workOrder.beeperId),
+      employee: workOrder.employee,
     },
   });
 

@@ -3,9 +3,9 @@ import Navbar from "../../components/Navbar";
 import ProdOps from "../../components/prod/ProdOps";
 import LoggedLayout from "../../layouts/LoggedLayout.astro";
 
-if (!Astro.cookies.has("auth")) {
-  return Astro.redirect("/prodOps");
-}
+// if (!Astro.cookies.has("auth")) {
+//   return Astro.redirect("/prodOps");
+// }
 ---
 
 <LoggedLayout title="Nueva WorkOrder">

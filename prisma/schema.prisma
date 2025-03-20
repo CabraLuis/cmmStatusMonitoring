@@ -30,6 +30,7 @@ model WorkOrder {
   beeperAsignee BeeperAsignee? @relation(fields: [beeperId], references: [id])
   cmmTechId     Int?
   cmmTech       CMMTech?       @relation(fields: [cmmTechId], references: [id])
+  employee     String?
 
   partStatusRegistry WorkOrderStatusRegistry[]
 

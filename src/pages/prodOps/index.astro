@@ -2,13 +2,14 @@
 import Layout from "../../layouts/Layout.astro";
 import LoginForm from "../../components/LoginForm";
 
-if (Astro.cookies.has("auth")) {
-  const cookie = Astro.cookies.get("auth");
-  const value = cookie?.number();
-  if (value == 2 && !isNaN(value)) {
-    return Astro.redirect("prodOps/form");
-  }
-}
+// if (Astro.cookies.has("auth")) {
+//   const cookie = Astro.cookies.get("auth");
+//   const value = cookie?.number();
+//   if (value == 2 && !isNaN(value)) {
+//     return Astro.redirect("prodOps/form");
+//   }
+// }
+return Astro.redirect("prodOps/form");
 ---
 
 <Layout title="Prod Login">

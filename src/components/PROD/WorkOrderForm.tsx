@@ -16,6 +16,7 @@ export default function WorkOrderForm({ closeForm }: WOFormProps) {
     estimatedTime: "",
     rejected: false,
     beeperId: null,
+    employee: null,
   };
 
   const [formData, setFormData] = useState(fields);
@@ -177,7 +178,28 @@ export default function WorkOrderForm({ closeForm }: WOFormProps) {
         </datalist>
       </div>
 
-      <label class="form-control w-full">
+      {
+        formData.area === "WELDING" ? (
+<label class="form-control w-full">
+        <div class="label">
+          <span class="label-text">Empleado</span>
+        </div>
+        <select
+          autofocus={true}
+          class="select select-bordered"
+          onChange={(e: any) =>
+            setFormData({ ...formData, employee: e.target.value })
+          }
+        >
+          <option selected>No Asignado</option>
+          <option value = "Yonatahan Rosales">Yonatahan Rosales</option>
+          <option value = "Erik Gómez">Eric Gómez</option>
+        </select>
+      </label>
+        )
+        :
+        (
+<label class="form-control w-full">
         <div class="label">
           <span class="label-text">Número de Beeper</span>
         </div>
@@ -196,6 +218,10 @@ export default function WorkOrderForm({ closeForm }: WOFormProps) {
           ))}
         </select>
       </label>
+        )
+      }
+
+
 
       <div class="form-control mt-6">
         <button class="btn btn-success text-xl">Agregar</button>
