@@ -1,14 +1,18 @@
 ---
 import Navbar from "../../components/Navbar";
-import ProdOps from "../../components/prod/ProdOps";
-import LoggedLayout from "../../layouts/LoggedLayout.astro";
+import ProdOpsModule from "../../components/prod/ProdOpsModule";
+import Layout from "../../layouts/Layout.astro";
 
-// if (!Astro.cookies.has("auth")) {
-//   return Astro.redirect("/prodOps");
-// }
+let value;
+
+if (Astro.cookies.has("area")) {
+  const cookie = Astro.cookies.get("area");
+  value = cookie?.value;
+}
+
 ---
 
-<LoggedLayout title="Nueva WorkOrder">
+<Layout title="Nueva WorkOrder">
   <Navbar client:load />
-  <ProdOps client:load />
-</LoggedLayout>
+  <ProdOpsModule area={value} client:load />
+</Layout>

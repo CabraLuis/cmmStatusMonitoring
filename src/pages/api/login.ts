@@ -11,7 +11,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return new Response(null, { status: 401 });
   }
 
-  cookies.set("auth", `${authorizedUser.id}`, { path: "/", maxAge: 34560000 },);
+  cookies.set("auth", `${authorizedUser.id}`, { path: "/", maxAge: 34560000 });
 
   if (authorizedUser.id === 1) {
     return new Response(JSON.stringify({ message: "CMM" }), { status: 200 });

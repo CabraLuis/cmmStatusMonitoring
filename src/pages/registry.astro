@@ -42,9 +42,7 @@ type WorkOrderStatusRegistry = Prisma.WorkOrderStatusRegistryGetPayload<{
   import { DataTable } from "simple-datatables";
   import { exportCSV } from "simple-datatables";
   const dataTable = new DataTable("#data", {
-    // Enable search field
     searchable: true,
-    // Define how many visible wos per page
     perPage: 9,
     sortable: true,
 
@@ -84,10 +82,10 @@ type WorkOrderStatusRegistry = Prisma.WorkOrderStatusRegistryGetPayload<{
       >
     </div>
     <div class="w-full overflow-x-scroll">
-      <!-- <div class="mt-3 w-full flex justify-center">
+      <div class="mt-3 w-full flex justify-center">
         <span class="text-red-500">*</span>
         Sort by clicking on the titles
-      </div> -->
+      </div>
 
       <table class="table bg-base-100" id="data">
         <thead>

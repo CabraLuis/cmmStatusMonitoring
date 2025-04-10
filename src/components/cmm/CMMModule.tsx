@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from "preact/hooks";
-import Navbar from "../Navbar";
 import Card from "../Card";
 import { createRef } from "preact";
 
-export default function WorkOrderUpdate() {
+export default function CMMModule() {
   const [data, setData] = useState([]);
   const [formData, setFormData] = useState({
     estimatedTime: "",

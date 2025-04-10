@@ -1,14 +1,10 @@
 import { useEffect, useRef, useState } from "preact/hooks";
-import Navbar from "../Navbar";
-import WorkOrderForm from "./WorkOrderForm";
 import Card from "../Card";
 import { createRef } from "preact";
 
-export default function WorkOrderUpdate() {
+export default function ProdSupModule() {
   const [data, setData] = useState([]);
   const [wo, setWO] = useState({});
-  const [counterKey, setCounterKey] = useState(0);
-  let formModalRef = createRef<HTMLDialogElement>();
   let rejectModalRef = createRef<HTMLDialogElement>();
 
   useEffect(() => {

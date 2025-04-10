@@ -1,5 +1,4 @@
 import { useState } from "preact/hooks";
-import Navbar from "./Navbar";
 
 export default function LoginForm() {
   const [formData, setFormData] = useState({

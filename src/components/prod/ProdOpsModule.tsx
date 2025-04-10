@@ -1,7 +1,10 @@
-import { useState } from "preact/hooks";
-import WorkOrderForm from "./WorkOrderForm";
+import WorkOrderForm from "./ProdOpsForm";
 
-export default function ProdOps() {
+interface ProdOpsModuleProps {
+  area? : string;
+}
+
+export default function ProdOpsModule({area}:ProdOpsModuleProps) {
   return (
     <div >
       <div class="hero bg-base-200 min-h-screen">
@@ -12,7 +15,7 @@ export default function ProdOps() {
           </div>
           <div class="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
             <div className="card-body">
-              <WorkOrderForm></WorkOrderForm>
+              <WorkOrderForm area={area}></WorkOrderForm>
             </div>
           </div>
         </div>

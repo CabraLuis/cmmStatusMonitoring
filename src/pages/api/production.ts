@@ -9,7 +9,7 @@ function fromDateToString(date: Date) {
   return dateAsString;
 }
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request,cookies }) => {
   const { workOrder } = await request.json();
 
   const newPart = await prisma.part.upsert({
@@ -41,6 +41,8 @@ export const POST: APIRoute = async ({ request }) => {
       area: workOrder.area,
     },
   });
+
+  cookies.set("area", `${newArea.area}`, { path: "/", maxAge: 34560000 });
 
   const newWorkOrder = await prisma.workOrder.create({
     data: {

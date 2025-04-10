@@ -112,8 +112,6 @@ export default function Card({
       class={`stats grid-cols-2 mb-3 mx-4 bg-base-100 ${border} border-4 relative`}
     >
       <div class="absolute justify-self-center text-lg text-wrap w-28 text-center">
-        {/* ESTE ES EL TIMER */}
-
         {workOrder.statusId === 2 && (
           <>
             {counter}
